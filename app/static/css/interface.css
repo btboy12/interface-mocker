@@ -1,0 +1,35 @@
+#req_info span:first-of-type{
+    padding-right:0 
+}
+
+#req_info span:last-of-type{
+    padding-left:0 
+}
+
+#req_info table{
+    margin-bottom: 0
+}
+
+#req_info button{
+    width: calc(100% - 30px);
+    margin: 0 15px;
+}
+
+#res_info span:first-of-type{
+    padding-right:0 
+}
+
+#res_info span:last-of-type{
+    padding-left:0 
+}
+
+#res_info table{
+    margin-bottom: 0
+}
+
+#res_info button{
+    width: calc(100% - 30px);
+    margin: 0 15px;
+}
+
+

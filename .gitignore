@@ -1,0 +1,6 @@
+typings
+.vscode
+doc_template
+DOC_TEST
+node_modules
+/*.db
