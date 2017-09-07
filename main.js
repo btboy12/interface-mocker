@@ -39,6 +39,6 @@ app.get('/', function (req, res) {
     res.redirect('/developer');
 });
 
-var server = app.listen(80, function () {
-    console.info("server running on :80");
+var server = app.listen(8000, function () {
+    console.info("server running on :8000");
 });
