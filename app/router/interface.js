@@ -20,31 +20,18 @@ var handlers = {
         });
     },
     post: function (req, res) {
-        mapper.interface.create(req.body)
-            .then(function (interface) {
-                mapper.developer.findById(req.body.developer).then(function (developer) {
-                    interface.setDeveloper(developer);
+        mapper.orm.transaction(function (t) {
+            return mapper.interface.create(req.body, { transaction: t })
+                .then(function (interface) {
+                    return interface.setStatuses(req.body["status[]"], { transaction: t });
+                })
+                .then(function () {
+                    res.sendStatus(200);
                 }).catch(function (err) {
                     console.error(err);
                     res.sendStatus(500);
                 });
-                mapper.interface_class.findById(req.body.type).then(function (c) {
-                    interface.setInterface_class(c);
-                }).catch(function (err) {
-                    console.error(err);
-                    res.sendStatus(500);
-                });
-                mapper.status.findAll({ where: { id: { $in: req.body["status[]"] } } }).then(function (c) {
-                    interface.setStatuses(c);
-                }).catch(function (err) {
-                    console.error(err);
-                    res.sendStatus(500);
-                });
-                res.sendStatus(200);
-            }).catch(function (err) {
-                console.error(err);
-                res.sendStatus(500);
-            });
+        })
     }
 }
 exports.handlers = handlers;

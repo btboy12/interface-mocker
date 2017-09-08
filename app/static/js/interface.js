@@ -7,7 +7,7 @@ $("table").on("click-row.bs.table", function (row, field, $element) {
 $("#modal").on("show.bs.modal", function (e) {
     $("#req_info").editableTableWidget();
     // 接口所属
-    $('#type').select2({
+    $('#interfaceClassId').select2({
         width: "100%",
         minimumResultsForSearch: Infinity,
         ajax: {
@@ -51,7 +51,7 @@ $("#modal").on("show.bs.modal", function (e) {
         }
     });
     // 所属开发者
-    $("#developer").select2({
+    $("#developerId").select2({
         width: "100%",
         minimumResultsForSearch: Infinity,
         ajax: {
@@ -166,10 +166,10 @@ function upload() {
         data: {
             name: $("#name").val(),
             description: $("#description").val(),
-            type: $("#type").val(),
+            interfaceClassId: $("#interfaceClassId").val(),
             status: $("#status").val(),
             router: $("#addr").val(),
-            developer: $("#developer").val(),
+            developerId: $("#developerId").val(),
             reqInfo: JSON.stringify(current.reqInfo),
             resInfo: JSON.stringify(current.resInfo)
         },

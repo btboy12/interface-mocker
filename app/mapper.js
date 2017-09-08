@@ -60,6 +60,7 @@ test_exmp.belongsTo(interface);
 // orm.sync({ force: true });
 orm.sync();
 
+exports.orm = orm;
 exports.interface = interface;
 exports.developer = developer;
 exports.test_exmp = test_exmp;
