@@ -1,7 +1,8 @@
 var current;
 
-$("table").on("click-row.bs.table", function (row, field, $element) {
+$("table").on("click-row.bs.table", function ($event, value, $element) {
     $("#modal").modal("show");
+    $.get("/api/interface/"+value.id);
 });
 
 $("#modal").on("show.bs.modal", function (e) {

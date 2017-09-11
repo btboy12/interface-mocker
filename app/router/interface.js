@@ -1,4 +1,4 @@
-const {interface,orm} = require("../mapper.js");
+const {interface,developer,orm} = require("../mapper.js");
 
 exports.path = "/api/interface";
 var handlers = {
@@ -6,7 +6,7 @@ var handlers = {
         interface.findAll({
             attributes: ['id', 'name', 'router'],
             include: {
-                model: mapper.developer,
+                model: developer,
                 attributes: ['name']
             }
         }).then(function (results) {
