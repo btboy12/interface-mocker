@@ -1,103 +1,77 @@
 var current;
+// 接口所属
+$('#interfaceClassId').select2({
+    width: "100%",
+    minimumResultsForSearch: Infinity,
+    ajax: {
+        url: "/api/intfc_class",
+        dataType: 'json',
+        processResults: function (data, params) {
+            var result = [];
+            for (var i in data) {
+                result.push({
+                    id: data[i].id,
+                    text: data[i].name
+                });
+            }
 
-$("table").on("click-row.bs.table", function ($event, value, $element) {
-    $("#modal").modal("show");
+            return {
+                results: result
+            }
+        }
+    }
     $.get("/api/interface/"+value.id);
 });
-
-$("#modal").on("show.bs.modal", function (e) {
-    $("#req_info").editableTableWidget();
-    // 接口所属
-    $('#interfaceClassId').select2({
-        width: "100%",
-        minimumResultsForSearch: Infinity,
-        ajax: {
-            url: "/api/intfc_class",
-            dataType: 'json',
-            processResults: function (data, params) {
-                var result = [];
-                for (var i in data) {
-                    result.push({
-                        id: data[i].id,
-                        text: data[i].name
-                    });
-                }
-
-                return {
-                    results: result
-                }
+// code
+$("#status").select2({
+    width: "100%",
+    minimumResultsForSearch: Infinity,
+    multiple: true,
+    ajax: {
+        url: "/api/status",
+        dataType: 'json',
+        processResults: function (data, params) {
+            var result = [];
+            for (var i in data) {
+                result.push({
+                    id: data[i].id,
+                    text: data[i].code
+                });
+            }
+            return {
+                results: result
             }
         }
-    });
-    // code
-    $("#status").select2({
-        width: "100%",
-        minimumResultsForSearch: Infinity,
-        multiple: true,
-        ajax: {
-            url: "/api/status",
-            dataType: 'json',
-            processResults: function (data, params) {
-                var result = [];
-                for (var i in data) {
-                    result.push({
-                        id: data[i].id,
-                        text: data[i].code
-                    });
-                }
-                return {
-                    results: result
-                }
+    }
+});
+// 所属开发者
+$("#developerId").select2({
+    width: "100%",
+    minimumResultsForSearch: Infinity,
+    ajax: {
+        url: "/api/developer",
+        dataType: 'json',
+        processResults: function (data, params) {
+            var result = [];
+            for (var i in data) {
+                result.push({
+                    id: data[i].id,
+                    text: data[i].name
+                });
+            }
+
+            return {
+                results: result
             }
         }
-    });
-    // 所属开发者
-    $("#developerId").select2({
-        width: "100%",
-        minimumResultsForSearch: Infinity,
-        ajax: {
-            url: "/api/developer",
-            dataType: 'json',
-            processResults: function (data, params) {
-                var result = [];
-                for (var i in data) {
-                    result.push({
-                        id: data[i].id,
-                        text: data[i].name
-                    });
-                }
-
-                return {
-                    results: result
-                }
-            }
-        }
-    });
-
-    current = {
-        reqInfo: [],
-        resInfo: []
     }
 });
 
-function initModal(data) {
+$("#req_info").editableTableWidget();
 
-}
 
-$('#req_info').on('change', function (event, newValue) {
-    var target_id = $(event.target).index();
-    var parent_id = $(event.target).parent().index();
-    var notEmpty = newValue && newValue.trim();
-    notEmpty && (current.reqInfo[parent_id][target_id] = newValue);
-    console.info(target_id, parent_id, newValue);
-    for (var str of current.reqInfo[parent_id]) {
-        if (str && str.trim()) {
-            notEmpty = true;
-            break;
-        }
-    }
-    notEmpty || delReqInfo(parent_id);
-    return true;
+$("table").on("click-row.bs.table", function (row, field, $element) {
+    $("#modal").modal("show");
 });
 
 $('#req_info_content').on('nextStep', function (event) {
@@ -112,14 +86,10 @@ $('#req_info_content').on('nextStep', function (event) {
 });
 
 function addReqInfo(event) {
-    event.preventDefault();
-
-    $("#req_info_del").append("<tr><td><a class='glyphicon glyphicon-trash' onclick='delReqInfo(" + current.reqInfo.length + ")'></a>&nbsp;</td></tr>");
+    event && event.preventDefault();
+    $("#req_info_del").append("<tr><td><a class='glyphicon glyphicon-trash' onclick='delReqInfo(this)'></a>&nbsp;</td></tr>");
     $("#req_info_content").append("<tr><td>&nbsp;</td><td></td><td></td></tr>");
     $("#req_info_content").editableTableWidget();
-    $("#req_info button").hide();
-
-    current.reqInfo.push([]);
 }
 
 function delReqInfo(id) {
@@ -131,12 +101,9 @@ function delReqInfo(id) {
 
 function addResInfo(event) {
     event && event.preventDefault();
-    current.reqInfo.push([]);
-
     $("#res_info_del").append("<tr><td><a class='glyphicon glyphicon-trash'></a>&nbsp;</td></tr>");
     $("#res_info_content").append("<tr><td>&nbsp;</td><td></td><td></td></tr>");
     $("#res_info_content").editableTableWidget();
-    $("#res_info button").hide();
 }
 
 function iSubmit(event, element) {
@@ -153,15 +120,17 @@ function add() {
 }
 
 function upload() {
-    var method;
+    var method, postfix;
     if ($("#id").val()) {
         method = "put";
+        postfix = "/" + $("#id").val();
     } else {
         method = "post";
+        postfix = "";
     }
 
     $.ajax({
-        url: "/api/interface" + (method == "put" ? ("/" + $("#id").val()) : ""),
+        url: "/api/interface" + postfix,
         type: method,
         dataType: "json",
         data: {
@@ -171,8 +140,8 @@ function upload() {
             status: $("#status").val(),
             router: $("#addr").val(),
             developerId: $("#developerId").val(),
-            reqInfo: JSON.stringify(current.reqInfo),
-            resInfo: JSON.stringify(current.resInfo)
+            reqInfo: JSON.stringify(getTableData("#req_info_content")),
+            resInfo: JSON.stringify(getTableData("#res_info_content"))
         },
         success: function (data, status) {
             $("#data_list").bootstrapTable('refresh', { silent: true });
@@ -182,4 +151,16 @@ function upload() {
             console.warn(error);
         }
     });
+}
+
+function getTableData(selector) {
+    var result = [];
+    $(selector).find("tr").each(function (i, e) {
+        var temp = [];
+        $(e).find("td").each(function (_i, _e) {
+            temp.push($(_e).text());
+        })
+        result.push(temp);
+    });
+    return result;
 }
