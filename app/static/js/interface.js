@@ -20,7 +20,6 @@ $('#interfaceClassId').select2({
             }
         }
     }
-    $.get("/api/interface/"+value.id);
 });
 // code
 $("#status").select2({
@@ -72,6 +71,7 @@ $("#req_info").editableTableWidget();
 
 $("table").on("click-row.bs.table", function (row, field, $element) {
     $("#modal").modal("show");
+    $.get("/api/interface/"+value.id);    
 });
 
 $('#req_info_content').on('nextStep', function (event) {
