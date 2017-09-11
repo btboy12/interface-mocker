@@ -1,10 +1,10 @@
-const mapper = require("../mapper.js");
+const {developer} = require("../mapper.js");
 
 exports.path = "/api/developer/:id";
 
 var handlers = {
     get: function (req, res) {
-        mapper.developer.findById(req.params.id)
+        developer.findById(req.params.id)
             .then(function (result) {
                 res.json(result)
             }).catch(function (err) {
@@ -13,7 +13,7 @@ var handlers = {
             });
     },
     put: function (req, res) {
-        mapper.developer.findById(req.params.id)
+        developer.findById(req.params.id)
             .then(function (result) {
                 result.update(req.body);
             }).then(function () {
@@ -24,7 +24,7 @@ var handlers = {
             });
     },
     delete: function (req, res) {
-        mapper.developer.findById(req.params.id)
+        developer.findById(req.params.id)
             .then(function (result) {
                 result.destroy();
             }).then(function () {

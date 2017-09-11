@@ -1,9 +1,9 @@
-const mapper = require("../mapper.js");
+const {interface,orm} = require("../mapper.js");
 
 exports.path = "/api/interface";
 var handlers = {
     get: function (req, res) {
-        mapper.interface.findAll({
+        interface.findAll({
             attributes: ['id', 'name', 'router'],
             include: {
                 model: mapper.developer,
@@ -20,10 +20,10 @@ var handlers = {
         });
     },
     post: function (req, res) {
-        mapper.orm.transaction(function (t) {
-            return mapper.interface.create(req.body, { transaction: t })
-                .then(function (interface) {
-                    return interface.setStatuses(req.body["status[]"], { transaction: t });
+        orm.transaction(function (t) {
+            return interface.create(req.body, { transaction: t })
+                .then(function (intfc) {
+                    return intfc.setStatuses(req.body["status[]"], { transaction: t });
                 })
                 .then(function () {
                     res.sendStatus(200);

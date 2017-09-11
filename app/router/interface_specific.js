@@ -1,10 +1,10 @@
-const {status} = require("../mapper.js");
+const {interface} = require("../mapper.js");
 
-exports.path = "/api/status/:id";
+exports.path = "/api/interface/:id";
 
 var handlers = {
     get: function (req, res) {
-        status.findById(req.params.id)
+        interface.findById(req.params.id)
             .then(function (result) {
                 res.json(result)
             }).catch(function (err) {
@@ -13,7 +13,7 @@ var handlers = {
             });
     },
     put: function (req, res) {
-        status.findById(req.params.id)
+        interface.findById(req.params.id)
             .then(function (result) {
                 result.update(req.body);
             }).then(function () {
@@ -24,7 +24,7 @@ var handlers = {
             });
     },
     delete: function (req, res) {
-        status.findById(req.params.id)
+        interface.findById(req.params.id)
             .then(function (result) {
                 result.destroy();
             }).then(function () {

@@ -1,9 +1,9 @@
-const mapper = require("../mapper.js");
+const {status} = require("../mapper.js");
 
 exports.path = "/api/status";
 var handlers = {
     get: function (req, res) {
-        mapper.status.findAll().then(function (results) {
+        status.findAll().then(function (results) {
             res.json(results);
         }).catch(function (err) {
             console.error(err);
@@ -11,7 +11,7 @@ var handlers = {
         });
     },
     post: function (req, res) {
-        mapper.status.create(req.body)
+        status.create(req.body)
             .then(function (results) {
                 res.sendStatus(200);
             }).catch(function (err) {
