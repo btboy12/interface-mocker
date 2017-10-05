@@ -1,3 +1,35 @@
+(function () {
+    Vue.component('v-select', VueSelect.VueSelect);
+    var app_data = {
+        info: {
+            id: null,
+            name: null,
+            addr: null,
+            developerId: null
+        },
+        developers: []
+    }
+
+    var app = new Vue({
+        el: "",
+        data: app_data,
+        method: {
+            getDevelopers: function (search, loading) {
+                $.get("/api/developer", function (data, status) {
+                    var temp = [];
+                    for (var i in data) {
+                        temp.push({
+                            label: data[i].name,
+                            value: data[i].id
+                        });
+                        app_data.developers = temp;
+                    }
+                });
+            }
+        }
+    });
+})();
+
 var current;
 // 接口所属
 $('#interfaceClassId').select2({
@@ -21,7 +53,7 @@ $('#interfaceClassId').select2({
         }
     }
 });
-// code
+// 返回状态码
 $("#status").select2({
     width: "100%",
     minimumResultsForSearch: Infinity,
@@ -71,7 +103,7 @@ $("#req_info").editableTableWidget();
 
 $("table").on("click-row.bs.table", function (row, field, $element) {
     $("#modal").modal("show");
-    $.get("/api/interface/"+value.id);    
+    $.get("/api/interface/" + value.id);
 });
 
 $('#req_info_content').on('nextStep', function (event) {
@@ -135,13 +167,13 @@ function upload() {
         dataType: "json",
         data: {
             name: $("#name").val(),
-            description: $("#description").val(),
-            interfaceClassId: $("#interfaceClassId").val(),
-            status: $("#status").val(),
+            // description: $("#description").val(),
+            // interfaceClassId: $("#interfaceClassId").val(),
+            // statuses: $("#status").val().join(","),
             router: $("#addr").val(),
             developerId: $("#developerId").val(),
-            reqInfo: JSON.stringify(getTableData("#req_info_content")),
-            resInfo: JSON.stringify(getTableData("#res_info_content"))
+            // reqInfo: JSON.stringify(getTableData("#req_info_content")),
+            // resInfo: JSON.stringify(getTableData("#res_info_content"))
         },
         success: function (data, status) {
             $("#data_list").bootstrapTable('refresh', { silent: true });

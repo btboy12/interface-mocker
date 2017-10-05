@@ -1,4 +1,4 @@
-const {interface,developer,orm} = require("../mapper.js");
+const { interface, developer, orm } = require("../mapper.js");
 
 exports.path = "/api/interface";
 var handlers = {
@@ -20,18 +20,13 @@ var handlers = {
         });
     },
     post: function (req, res) {
-        orm.transaction(function (t) {
-            return interface.create(req.body, { transaction: t })
-                .then(function (intfc) {
-                    return intfc.setStatuses(req.body["status[]"], { transaction: t });
-                })
-                .then(function () {
-                    res.sendStatus(200);
-                }).catch(function (err) {
-                    console.error(err);
-                    res.sendStatus(500);
-                });
-        })
+        interface.create(req.body)
+            .then(function (results) {
+                res.sendStatus(200);
+            }).catch(function (err) {
+                console.error(err);
+                res.sendStatus(500);
+            });
     }
 }
 exports.handlers = handlers;

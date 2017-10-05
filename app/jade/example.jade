@@ -19,19 +19,19 @@ html
             .modal-dialog
                 form.form-horizontal.modal-content(role='form')
                     .modal-body
-                        input#id(style='display:none', name='id' v-model='id')
+                        input#id(style='display:none', name='id')
                         .form-group
                             label.control-label.col-sm-2(for='name') 姓名
                             .col-sm-10
-                                input.form-control(type='text', name='name' v-model='name')
+                                input#name.form-control(type='text', name='name')
                         .form-group
                             label.control-label.col-sm-2(for='addr') 地址
                             .col-sm-10
-                                input.form-control(type='text', name='addr' v-model='addr')
+                                input#addr.form-control(type='text', name='addr')
                         .form-group
                             label.control-label.col-sm-2(for='port') 端口号
                             .col-sm-10
-                                input.form-control(type='number', name='port' v-model='port')
+                                input#port.form-control(type='number', name='port')
                     .modal-footer
                         button.btn.btn-default(type='button', data-dismiss='modal') 取消
                         button.btn.btn-primary(type='button', onclick='upload()') 确定

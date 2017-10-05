@@ -32,15 +32,13 @@ var interface = orm.define('interface', {
     id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
     name: { type: Sequelize.STRING, allowNull: false, validate: { notEmpty: true } },
     router: { type: Sequelize.STRING, allowNull: false, validate: { notEmpty: true } },
+    statuses: { type: Sequelize.STRING },
     reqInfo: { type: Sequelize.STRING },
     reqInfo: { type: Sequelize.STRING },
     description: { type: Sequelize.STRING }
 });
 interface.belongsTo(developer);
 interface.belongsTo(interface_class);
-
-interface.belongsToMany(status, { through: "interfc_status" });
-status.belongsToMany(interface, { through: "interfc_status" });
 
 // 返回示例表
 var sample = orm.define("sample", {
@@ -57,8 +55,8 @@ var test_exmp = orm.define('test_exmp', {
 });
 test_exmp.belongsTo(interface);
 
-// orm.sync({ force: true });
-orm.sync();
+orm.sync({ force: true });
+// orm.sync();
 
 exports.orm = orm;
 exports.interface = interface;
