@@ -1,12 +1,12 @@
-const { interface, developer, orm } = require("../mapper.js");
+const { example, interface } = require("../mapper.js");
 
-exports.path = "/api/interface";
+exports.path = "/api/example";
 var handlers = {
     get: function (req, res) {
-        interface.findAll({
-            attributes: ['id', 'name', 'router'],
+        example.findAll({
+            attributes: ['id', 'name'],
             include: {
-                model: developer,
+                model: interface,
                 attributes: ['name']
             }
         }).then(function (results) {
@@ -17,13 +17,14 @@ var handlers = {
         });
     },
     post: function (req, res) {
-        interface.create(req.body)
+        example.create(req.body)
             .then(function (results) {
                 res.sendStatus(200);
             }).catch(function (err) {
                 console.error(err);
                 res.sendStatus(500);
-            });
+            })
     }
 }
 exports.handlers = handlers;
+

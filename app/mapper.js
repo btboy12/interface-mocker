@@ -42,11 +42,14 @@ interface.belongsTo(developer);
 interface.belongsTo(interface_class);
 
 // 返回示例表
-var sample = orm.define("sample", {
+var example = orm.define("example", {
     id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
-    content: { type: Sequelize.STRING, allowNull: false, validate: { notEmpty: true } },
+    name: { type: Sequelize.STRING, allowNull: false, validate: { notEmpty: true } },
+    code: { type: Sequelize.INTEGER, allowNull: false, validate: { notEmpty: true } },
+    cookies: { type: Sequelize.STRING },
+    content: { type: Sequelize.STRING },
 });
-sample.belongsTo(interface);
+example.belongsTo(interface);
 
 // 测试样例表
 var test_exmp = orm.define('test_exmp', {
@@ -56,10 +59,11 @@ var test_exmp = orm.define('test_exmp', {
 });
 test_exmp.belongsTo(interface);
 
-orm.sync({ force: true });
-// orm.sync();
+// orm.sync({ force: true });
+orm.sync();
 
 exports.orm = orm;
+exports.example = example;
 exports.interface = interface;
 exports.developer = developer;
 exports.test_exmp = test_exmp;

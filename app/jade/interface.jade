@@ -3,7 +3,6 @@ html
         title 接口列表
         include ./public/common.jade
         link(rel='stylesheet', type='text/css', href='/css/interface.css')
-        link(rel='stylesheet', type='text/css', href='/public/css/select2.min.css')
         script(src="/public/js/vue-select.js")
         //- script(src="/public/i18n/zh-CN.js")
         script(src="/public/js/mindmup-editabletable.js")
@@ -18,7 +17,7 @@ html
                     tr
                         th(data-field="name") 接口名
                         th(data-field="router") 接口地址
-                        th(data-field="developer") 开发者
+                        th(data-field="developer.name") 开发者
                         th 操作
                 
         #modal.modal.fade

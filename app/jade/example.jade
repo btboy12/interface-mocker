@@ -1,19 +1,19 @@
 html
     head
-        title 接口模拟器-开发者配置
+        title 接口模拟器-返回样例
         include ./public/common.jade
     body
--     var page='developer'
+-     var page='example'
         include ./public/header.jade
+        script(src="/public/js/vue-select.js")
         .container
             #toolbar.btn-group
                 btn.btn.btn-primary(onclick='add()') 添加
-            table#data_list(data-toggle='table', data-toolbar='#toolbar', data-url='/api/developer')
+            table#data_list(data-toggle='table', data-toolbar='#toolbar', data-url='/api/example')
                 thead
                     tr
-                        th(data-field='name') 姓名
-                        th(data-field='addr') 地址
-                        th(data-field='port') 端口号
+                        th(data-field='name') 样例名
+                        th(data-field='interface.name') 对应接口
                         th(data-formatter='getButton') 操作
         #modal.modal.fade(tabindex='-1', role='dialog')
             .modal-dialog
@@ -21,18 +21,26 @@ html
                     .modal-body
                         input#id(style='display:none', name='id')
                         .form-group
-                            label.control-label.col-sm-2(for='name') 姓名
+                            label.control-label.col-sm-2(for='name') 样例名
                             .col-sm-10
-                                input#name.form-control(type='text', name='name')
+                                input.form-control(type='text', name='name' v-model='info.name')
                         .form-group
-                            label.control-label.col-sm-2(for='addr') 地址
+                            label.control-label.col-sm-2(for='intfcl') 对应接口
                             .col-sm-10
-                                input#addr.form-control(type='text', name='addr')
+                                v-select(v-model='selectedInterface', label='name', :options='interfaces', :on-search='getInterfaces')
                         .form-group
-                            label.control-label.col-sm-2(for='port') 端口号
+                            label.control-label.col-sm-2(for='code') 状态码
                             .col-sm-10
-                                input#port.form-control(type='number', name='port')
+                                input.form-control(type='number', name='code' v-model='info.code')
+                        .form-group
+                            label.control-label.col-sm-2(for='cookies') 设置cookies
+                            .col-sm-10
+                                textarea.form-control(name="cookies", v-model='info.cookies' cols="30", rows="10")
+                        .form-group
+                            label.control-label.col-sm-2(for='content') 返回内容
+                            .col-sm-10
+                                textarea.form-control(name='content', v-model='info.content' cols="30", rows="10")        
                     .modal-footer
                         button.btn.btn-default(type='button', data-dismiss='modal') 取消
                         button.btn.btn-primary(type='button', onclick='upload()') 确定
-    script(src='/js/developer.js')
+    script(src='/js/example.js')
