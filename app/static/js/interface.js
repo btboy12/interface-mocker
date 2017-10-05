@@ -1,110 +1,79 @@
 (function () {
     Vue.component('v-select', VueSelect.VueSelect);
     var app_data = {
+        id: null,
         info: {
-            id: null,
             name: null,
-            addr: null,
+            router: null,
             developerId: null
         },
+        selectedDeveloper: null,
         developers: []
     }
 
     var app = new Vue({
-        el: "",
+        el: "#modal",
         data: app_data,
-        method: {
-            getDevelopers: function (search, loading) {
-                $.get("/api/developer", function (data, status) {
-                    var temp = [];
-                    for (var i in data) {
-                        temp.push({
-                            label: data[i].name,
-                            value: data[i].id
-                        });
-                        app_data.developers = temp;
-                    }
-                });
-            }
+        methods: {
+            getDevelopers: getDevelopers
         }
     });
+
+    getDevelopers();
+
+    $("table").on("click-row.bs.table", function (row, field, $element) {
+        $("#modal").modal("show");
+        app_data.id = field.id;
+        $.get("/api/interface/" + field.id);
+    });
+
+    function getDevelopers(search, loading) {
+        loading && loading(true);
+        $.get("/api/developer", function (data, status) {
+            app_data.developers = data;
+            loading && loading(false);
+        });
+    }
+
+    window.add = function () {
+        app_data.id = null;
+        app_data.info = {
+            name: null,
+            router: null,
+            developerId: null
+        },
+            $("#modal").modal("show");
+    }
+
+    window.upload = function () {
+        var method, postfix;
+        if (app_data.id) {
+            method = "put";
+            postfix = "/" + app_data.id;
+        } else {
+            method = "post";
+            postfix = "";
+        }
+
+        app_data.info.developerId = app_data.selectedDeveloper.id;
+
+        $.ajax({
+            url: "/api/interface" + postfix,
+            type: method,
+            data: app_data.info,
+            success: function (data, status) {
+                $("#data_list").bootstrapTable('refresh', { silent: true });
+                $("#modal").modal('hide');
+            },
+            error: function (xhr, status, error) {
+                console.warn(error);
+            }
+        });
+    }
 })();
-
-var current;
-// 接口所属
-$('#interfaceClassId').select2({
-    width: "100%",
-    minimumResultsForSearch: Infinity,
-    ajax: {
-        url: "/api/intfc_class",
-        dataType: 'json',
-        processResults: function (data, params) {
-            var result = [];
-            for (var i in data) {
-                result.push({
-                    id: data[i].id,
-                    text: data[i].name
-                });
-            }
-
-            return {
-                results: result
-            }
-        }
-    }
-});
-// 返回状态码
-$("#status").select2({
-    width: "100%",
-    minimumResultsForSearch: Infinity,
-    multiple: true,
-    ajax: {
-        url: "/api/status",
-        dataType: 'json',
-        processResults: function (data, params) {
-            var result = [];
-            for (var i in data) {
-                result.push({
-                    id: data[i].id,
-                    text: data[i].code
-                });
-            }
-            return {
-                results: result
-            }
-        }
-    }
-});
-// 所属开发者
-$("#developerId").select2({
-    width: "100%",
-    minimumResultsForSearch: Infinity,
-    ajax: {
-        url: "/api/developer",
-        dataType: 'json',
-        processResults: function (data, params) {
-            var result = [];
-            for (var i in data) {
-                result.push({
-                    id: data[i].id,
-                    text: data[i].name
-                });
-            }
-
-            return {
-                results: result
-            }
-        }
-    }
-});
 
 $("#req_info").editableTableWidget();
 
-
-$("table").on("click-row.bs.table", function (row, field, $element) {
-    $("#modal").modal("show");
-    $.get("/api/interface/" + value.id);
-});
 
 $('#req_info_content').on('nextStep', function (event) {
     var target = $(event.target);
@@ -144,45 +113,6 @@ function iSubmit(event, element) {
         // $(element).hide();
         console.info(current);
     }
-}
-
-function add() {
-
-    $("#modal").modal("show");
-}
-
-function upload() {
-    var method, postfix;
-    if ($("#id").val()) {
-        method = "put";
-        postfix = "/" + $("#id").val();
-    } else {
-        method = "post";
-        postfix = "";
-    }
-
-    $.ajax({
-        url: "/api/interface" + postfix,
-        type: method,
-        dataType: "json",
-        data: {
-            name: $("#name").val(),
-            // description: $("#description").val(),
-            // interfaceClassId: $("#interfaceClassId").val(),
-            // statuses: $("#status").val().join(","),
-            router: $("#addr").val(),
-            developerId: $("#developerId").val(),
-            // reqInfo: JSON.stringify(getTableData("#req_info_content")),
-            // resInfo: JSON.stringify(getTableData("#res_info_content"))
-        },
-        success: function (data, status) {
-            $("#data_list").bootstrapTable('refresh', { silent: true });
-            $("#modal").modal('hide');
-        },
-        error: function (xhr, status, error) {
-            console.warn(error);
-        }
-    });
 }
 
 function getTableData(selector) {

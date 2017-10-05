@@ -32,6 +32,7 @@ var interface = orm.define('interface', {
     id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
     name: { type: Sequelize.STRING, allowNull: false, validate: { notEmpty: true } },
     router: { type: Sequelize.STRING, allowNull: false, validate: { notEmpty: true } },
+    method: { type: Sequelize.STRING, allowNull: false, validate: { notEmpty: true } },
     statuses: { type: Sequelize.STRING },
     reqInfo: { type: Sequelize.STRING },
     reqInfo: { type: Sequelize.STRING },

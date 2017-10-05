@@ -1,9 +1,11 @@
 (function () {
     var app_data = {
         id: null,
-        name: null,
-        addr: null,
-        port: null
+        info: {
+            name: null,
+            addr: null,
+            port: null
+        }
     };
 
     var app = new Vue({
@@ -21,8 +23,8 @@
     }
 
     window.add = function () {
-        app_data = {
-            id: null,
+        app_data.id = null;
+        app_data.info = {
             name: null,
             addr: null,
             port: null
@@ -32,8 +34,8 @@
 
     window.mod = function (id) {
         $.get("/api/developer/" + id, function (data, status) {
-            for (var i in app_data) {
-                app_data[i] = data[i];
+            for (var i in app_data.info) {
+                app_data.info[i] = data[i];
             }
         });
         $("#modal").modal('show');
@@ -55,9 +57,9 @@
 
     window.upload = function () {
         var method, param;
-        if ($("#id").val()) {
+        if (app_data.id) {
             method = "put";
-            param = "/" + $("#id").val();
+            param = "/" + app_data.id;
         } else {
             method = "post";
             param = "";
@@ -65,7 +67,7 @@
         $.ajax({
             url: "/api/developer" + param,
             type: method,
-            data: app_data,
+            data: app_data.info,
             success: function (data, status) {
                 $("#data_list").bootstrapTable('refresh', { silent: true });
                 $("#modal").modal('hide');

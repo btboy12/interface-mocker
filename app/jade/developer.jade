@@ -23,15 +23,15 @@ html
                         .form-group
                             label.control-label.col-sm-2(for='name') 姓名
                             .col-sm-10
-                                input.form-control(type='text', name='name' v-model='name')
+                                input.form-control(type='text', name='name' v-model='info.name')
                         .form-group
                             label.control-label.col-sm-2(for='addr') 地址
                             .col-sm-10
-                                input.form-control(type='text', name='addr' v-model='addr')
+                                input.form-control(type='text', name='addr' v-model='info.addr')
                         .form-group
                             label.control-label.col-sm-2(for='port') 端口号
                             .col-sm-10
-                                input.form-control(type='number', name='port' v-model='port')
+                                input.form-control(type='number', name='port' v-model='info.port')
                     .modal-footer
                         button.btn.btn-default(type='button', data-dismiss='modal') 取消
                         button.btn.btn-primary(type='button', onclick='upload()') 确定
