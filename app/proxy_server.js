@@ -26,7 +26,8 @@ const app = http.createServer(function (req, res) {
                 res.end();
                 return;
             } else {
-                http.request({
+                req.headers["host"] = router.developer.addr;
+                var _req = http.request({
                     host: router.developer.addr,
                     port: router.developer.port,
                     path: req.url,
@@ -49,7 +50,7 @@ function Layer(data) {
     var _ = this;
     _.id = data.id;
     _.reg = pathToRegexp(data.router);
-    _.developer = data.developer;
+    _.developer = data.developer.get({ plain: true });
     _.method = data.method;
 
 
