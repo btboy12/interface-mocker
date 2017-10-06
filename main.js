@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require("body-parser");
 const fs = require("fs");
+const proxyServer = require("./app/proxy_server");
 
 const router_path = "./app/router/";
 const jade_path = "./app/jade"
@@ -41,4 +42,5 @@ app.get('/', function (req, res) {
 
 var server = app.listen(8000, function () {
     console.info("server running on :8000");
+    proxyServer.start(8081)
 });

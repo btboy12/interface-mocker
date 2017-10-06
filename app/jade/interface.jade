@@ -18,13 +18,13 @@ html
                         th(data-field="name") 接口名
                         th(data-field="router") 接口地址
                         th(data-field="developer.name") 开发者
-                        th 操作
+                        th(data-formatter='getButton') 操作
                 
         #modal.modal.fade
             .modal-dialog.modal-lg(onkeypress='iSubmit(event,this)')
                 .modal-content
                     .modal-body
-                        input#id(style='display:none', v-model='id')
+                        input(style='display:none', v-model='id')
                         .panel.panel-primary
                             .panel-heading
                                 h3.panel-title 基本信息
@@ -98,4 +98,33 @@ html
                     .modal-footer
                         button.btn.btn-default(type='button', data-dismiss='modal') 取消
                         button.btn.btn-primary(type='button', onclick='upload()') 确定
+        
+        #modal_sample.modal.fade
+            .modal-dialog.modal-lg
+                .modal-content
+                    .modal-body
+                        input(style='display:none', v-model='id')
+                        .panel.panel-default(v-for="sample in sample_list")
+                            .panel-heading
+                                h3.panel-title
+                                    input(type="checkbox" v-model='sample.inUse')
+                                    input.form-control(type='text', name='name' v-model='sample.name')
+                            form.panel-body.form-horizontal
+                                input(style='display:none', name='id' v-model="sample.id")                                        
+                                .form-group
+                                    label.control-label.col-sm-2(for='code') 状态码
+                                    .col-sm-10
+                                        input.form-control(type='number', name='code' v-model='sample.code')
+                                .form-group
+                                    label.control-label.col-sm-2(for='cookies') 设置cookies
+                                    .col-sm-10
+                                        textarea.form-control(name="cookies", v-model='sample.cookies' cols="30", rows="10")
+                                .form-group
+                                    label.control-label.col-sm-2(for='content') 返回内容
+                                    .col-sm-10
+                                        textarea.form-control(name='content', v-model='sample.content' cols="30", rows="10")     
+                    .modal-footer
+                        button.btn.btn-default(type='button', data-dismiss='modal') 取消
+                        button.btn.btn-primary(type='button', onclick='upload()') 确定
+            
     script(src='/js/interface.js')

@@ -46,6 +46,7 @@ var example = orm.define("example", {
     id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
     name: { type: Sequelize.STRING, allowNull: false, validate: { notEmpty: true } },
     code: { type: Sequelize.INTEGER, allowNull: false, validate: { notEmpty: true } },
+    inUse: { type: Sequelize.BOOLEAN, allowNull: false, validate: { notEmpty: true }, defaultValue: false },
     cookies: { type: Sequelize.STRING },
     content: { type: Sequelize.STRING },
 });

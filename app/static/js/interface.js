@@ -19,13 +19,16 @@
         }
     });
 
-    getDevelopers();
-
-    $("table").on("click-row.bs.table", function (row, field, $element) {
-        $("#modal").modal("show");
-        app_data.id = field.id;
-        $.get("/api/interface/" + field.id);
+    var sample_data = {
+        id: null,
+        sample_list: []
+    }
+    var app_sample = new Vue({
+        el: "#modal_sample",
+        data: sample_data
     });
+
+    getDevelopers();
 
     function getDevelopers(search, loading) {
         loading && loading(true);
@@ -33,6 +36,12 @@
             app_data.developers = data;
             loading && loading(false);
         });
+    }
+
+    window.getButton = function (value, row, index) {
+        return "<button class='btn btn-warning' onclick='del(event," + row.id + ")'>删除</button>\
+                <button class='btn btn-primary' onclick='mod("+ row.id + ")'>修改</button>\
+                <button class='btn btn-primary' onclick='sample("+ row.id + ")'>返回样例</button>";
     }
 
     window.add = function () {
@@ -69,6 +78,19 @@
                 console.warn(error);
             }
         });
+    }
+
+    window.mod = function (id) {
+        $("#modal").modal("show");
+        app_data.id = id;
+        $.get("/api/interface/" + id);
+    }
+
+    window.sample = function (id) {
+        $.get("/api/example?interface=" + id, function (data, status) {
+            sample_data.sample_list = data;
+        });
+        $("#modal_sample").modal('show');
     }
 })();
 
