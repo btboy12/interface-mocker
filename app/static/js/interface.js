@@ -5,11 +5,19 @@
         info: {
             name: null,
             router: null,
+            method: null,
             developerId: null
         },
         selectedDeveloper: null,
         developers: []
     }
+
+    var sample_data = {
+        id: null,
+        sample_list: []
+    }
+
+    var orgin_data = {};
 
     var app = new Vue({
         el: "#modal",
@@ -19,10 +27,6 @@
         }
     });
 
-    var sample_data = {
-        id: null,
-        sample_list: []
-    }
     var app_sample = new Vue({
         el: "#modal_sample",
         data: sample_data
@@ -49,6 +53,7 @@
         app_data.info = {
             name: null,
             router: null,
+            method: null,
             developerId: null
         },
             $("#modal").modal("show");
@@ -59,6 +64,15 @@
         if (app_data.id) {
             method = "put";
             postfix = "/" + app_data.id;
+            var changed = false;
+            for (var i in app_data.info) {
+                changed |= (app_data.info[i] != orgin_data.intfcl[i]);
+                if (changed) break;
+            }
+            if (!changed) {
+                $("#modal").modal('hide');
+                return;
+            }
         } else {
             method = "post";
             postfix = "";
@@ -82,15 +96,74 @@
 
     window.mod = function (id) {
         $("#modal").modal("show");
-        app_data.id = id;
-        $.get("/api/interface/" + id);
+        $.get("/api/interface/" + id, function (data, status) {
+            app_data.id = id;
+            for (var i in app_data.info) {
+                app_data.info[i] = data[i];
+            }
+            app_data.selectedDeveloper = (app_data.developers.filter(function (item) {
+                return item.id == data.id;
+            })[0] || null);
+
+            orgin_data.intfcl = data;
+        });
+    }
+
+    window.del = function (event, id) {
+        event.stopPropagation()
+        $.ajax({
+            url: "/api/interface/" + id,
+            type: "delete",
+            success: function (data, status) {
+                $("#data_list").bootstrapTable('refresh', { silent: true });
+            },
+            error: function (xhr, status, error) {
+                console.warn(error);
+            }
+        });
     }
 
     window.sample = function (id) {
         $.get("/api/example?interface=" + id, function (data, status) {
-            sample_data.sample_list = data;
+            sample_data.sample_list = data.map(function (item, index, array) {
+                var result = {};
+                for (var i of ["id", "name", "inUse", "code", "cookies", "content"]) {
+                    result[i] = item[i];
+                }
+                return result;
+            });
+            orgin_data.sample = data;
         });
         $("#modal_sample").modal('show');
+    }
+
+    window.example_upload = function () {
+        var changed_example = [];
+        for (var i in sample_data.sample_list) {
+            var sample = sample_data.sample_list[i];
+            var orgin_sample = orgin_data.sample[i];
+            var changed = false;
+            for (var j in sample) {
+                changed |= (sample[j] != orgin_sample[j]);
+                if (changed) {
+                    changed_example.push(sample);
+                    break;
+                }
+            }
+        }
+        for (var i in changed_example) {
+            $.ajax({
+                url: "/api/example/" + changed_example[i].id,
+                type: "put",
+                data: changed_example[i],
+                success: function (data, status) {
+                    $("#modal_sample").modal('hide');
+                },
+                error: function (xhr, status, error) {
+                    console.warn(error);
+                }
+            });
+        }
     }
 })();
 

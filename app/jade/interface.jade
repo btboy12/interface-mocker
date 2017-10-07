@@ -24,7 +24,6 @@ html
             .modal-dialog.modal-lg(onkeypress='iSubmit(event,this)')
                 .modal-content
                     .modal-body
-                        input(style='display:none', v-model='id')
                         .panel.panel-primary
                             .panel-heading
                                 h3.panel-title 基本信息
@@ -125,6 +124,6 @@ html
                                         textarea.form-control(name='content', v-model='sample.content' cols="30", rows="10")     
                     .modal-footer
                         button.btn.btn-default(type='button', data-dismiss='modal') 取消
-                        button.btn.btn-primary(type='button', onclick='upload()') 确定
+                        button.btn.btn-primary(type='button', onclick='example_upload()') 确定
             
     script(src='/js/interface.js')

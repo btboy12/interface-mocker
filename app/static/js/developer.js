@@ -34,11 +34,13 @@
 
     window.mod = function (id) {
         $.get("/api/developer/" + id, function (data, status) {
+            app_data.id = data.id;
             for (var i in app_data.info) {
                 app_data.info[i] = data[i];
             }
         });
         $("#modal").modal('show');
+        return false;
     }
 
     window.del = function (event, id) {
