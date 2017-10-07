@@ -1,4 +1,4 @@
-const {developer} = require("../mapper.js");
+const { developer } = require("../mapper.js");
 
 exports.path = "/api/developer/:id";
 
@@ -13,15 +13,16 @@ var handlers = {
             });
     },
     put: function (req, res) {
-        developer.findById(req.params.id)
-            .then(function (result) {
-                result.update(req.body);
-            }).then(function () {
-                res.sendStatus(200);
-            }).catch(function (err) {
-                console.warn(err);
-                res.sendStatus(500);
-            });
+        developer.update(req.body, {
+            where: {
+                id: req.params.id
+            }
+        }).then(function () {
+            res.sendStatus(200);
+        }).catch(function (err) {
+            console.warn(err);
+            res.sendStatus(500);
+        });
     },
     delete: function (req, res) {
         developer.findById(req.params.id)
