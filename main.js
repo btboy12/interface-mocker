@@ -9,6 +9,7 @@ var app = express();
 
 app.use(express.static('app/static'));
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 app.set('views', jade_path);
 app.set('view engine', 'jade');
 

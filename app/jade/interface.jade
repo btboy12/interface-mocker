@@ -2,8 +2,10 @@ html
     head
         title 接口列表
         include ./public/common.jade
-        link(rel='stylesheet', type='text/css', href='/css/interface.css')
+        link(rel='stylesheet', href='/css/interface.css')
+        link(rel="stylesheet", href="public/css/bootstrap-switch.min.css")
         script(src="/public/js/vue-select.js")
+        script(src="/public/js/bootstrap-switch.min.js")
         //- script(src="/public/i18n/zh-CN.js")
         script(src="/public/js/mindmup-editabletable.js")
     body
@@ -102,12 +104,12 @@ html
             .modal-dialog.modal-lg
                 .modal-content
                     .modal-body
-                        input(style='display:none', v-model='id')
                         .panel.panel-default(v-for="sample in sample_list")
                             .panel-heading
-                                h3.panel-title
-                                    input(type="checkbox" v-model='sample.inUse')
-                                    input.form-control(type='text', name='name' v-model='sample.name')
+                                h3.panel-title.form-inline
+                                    input.switch(type="checkbox" v-model='sample.inUse')
+                                    input.name.form-control(type='text', name='name' v-model='sample.name')
+                                    button.btn.btn-warning 删除
                             form.panel-body.form-horizontal
                                 input(style='display:none', name='id' v-model="sample.id")                                        
                                 .form-group

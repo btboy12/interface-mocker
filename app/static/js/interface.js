@@ -132,7 +132,14 @@
                 }
                 return result;
             });
+            sample_data.id = id;
             orgin_data.sample = data;
+            Vue.nextTick(function () {
+                $("#modal_sample .switch").bootstrapSwitch();
+                $("#modal_sample .name").each(function (i, e) {
+                    $(e).width($(e).parent().width() - $(e).prev().outerWidth() - $(e).next().outerWidth());
+                });
+            });
         });
         $("#modal_sample").modal('show');
     }
@@ -142,28 +149,28 @@
         for (var i in sample_data.sample_list) {
             var sample = sample_data.sample_list[i];
             var orgin_sample = orgin_data.sample[i];
-            var changed = false;
-            for (var j in sample) {
-                changed |= (sample[j] != orgin_sample[j]);
-                if (changed) {
-                    changed_example.push(sample);
-                    break;
+            if (orgin_sample) {
+                var temp = {};
+                for (var j in sample) {
+                    sample[j] != orgin_sample[j] && (temp[j] = sample[j]);
                 }
+                $.isEmptyObject(temp) || changed_example.push(temp) && (temp.id = sample.id);
+            } else {
+                changed_example.push(sample);
             }
         }
-        for (var i in changed_example) {
-            $.ajax({
-                url: "/api/example/" + changed_example[i].id,
-                type: "put",
-                data: changed_example[i],
-                success: function (data, status) {
-                    $("#modal_sample").modal('hide');
-                },
-                error: function (xhr, status, error) {
-                    console.warn(error);
-                }
-            });
-        }
+        $.ajax({
+            url: "/api/example?" + "interface=" + sample_data.id,
+            type: "put",
+            contentType: "application/json",
+            data: JSON.stringify(changed_example),
+            success: function (data, status) {
+                $("#modal_sample").modal('hide');
+            },
+            error: function (xhr, status, error) {
+                console.warn(error);
+            }
+        });
     }
 })();
 

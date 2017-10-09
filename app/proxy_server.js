@@ -53,7 +53,6 @@ function Layer(data) {
     _.developer = data.developer.get({ plain: true });
     _.method = data.method;
 
-
     _.setResponse = function setResponse() {
         example.findAll({
             attributes: ['cookies', 'content', 'code'],

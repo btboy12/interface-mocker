@@ -32,4 +32,8 @@
     margin: 0 15px;
 }
 
+#modal_sample form{
+    display: none;
+}
+
 
