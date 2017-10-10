@@ -98,7 +98,7 @@ html
                         //-         button.btn.btn-default(onclick="addResInfo(event)") 添加
                     .modal-footer
                         button.btn.btn-default(type='button', data-dismiss='modal') 取消
-                        button.btn.btn-primary(type='button', onclick='upload()') 确定
+                        button.btn.btn-primary(type='button', @click='upload()') 确定
         
         #modal_sample.modal.fade
             .modal-dialog.modal-lg
@@ -108,10 +108,9 @@ html
                             .panel-heading
                                 h3.panel-title.form-inline
                                     input.switch(type="checkbox" v-model='sample.inUse')
-                                    input.name.form-control(type='text', name='name' v-model='sample.name')
+                                    span.name {{sample.name}}
                                     button.btn.btn-warning 删除
                             form.panel-body.form-horizontal
-                                input(style='display:none', name='id' v-model="sample.id")                                        
                                 .form-group
                                     label.control-label.col-sm-2(for='code') 状态码
                                     .col-sm-10
@@ -126,6 +125,6 @@ html
                                         textarea.form-control(name='content', v-model='sample.content' cols="30", rows="10")     
                     .modal-footer
                         button.btn.btn-default(type='button', data-dismiss='modal') 取消
-                        button.btn.btn-primary(type='button', onclick='example_upload()') 确定
+                        button.btn.btn-primary(type='button', @click='upload') 确定
             
     script(src='/js/interface.js')

@@ -8,28 +8,93 @@
             method: null,
             developerId: null
         },
+        orgin_info: {},
         selectedDeveloper: null,
         developers: []
     }
 
     var sample_data = {
         id: null,
-        sample_list: []
+        sample_list: [],
+        orgin_list: []
     }
-
-    var orgin_data = {};
 
     var app = new Vue({
         el: "#modal",
         data: app_data,
         methods: {
-            getDevelopers: getDevelopers
+            getDevelopers: getDevelopers,
+            upload: function () {
+                var method, postfix;
+                app_data.info.developerId = app_data.selectedDeveloper.id;
+                if (app_data.id) {
+                    method = "put";
+                    postfix = "/" + app_data.id;
+                    var temp = {};
+                    for (var i in app_data.info) {
+                        app_data.info[i] != app_data.orgin_info[i] && (temp[i] = app_data.info[i]);
+                    }
+                    if ($.isEmptyObject(temp)) {
+                        $("#modal").modal('hide');
+                        return;
+                    }
+                } else {
+                    method = "post";
+                    postfix = "";
+                }
+                $.ajax({
+                    url: "/api/interface" + postfix,
+                    type: method,
+                    data: app_data.info,
+                    success: function (data, status) {
+                        $("#data_list").bootstrapTable('refresh', { silent: true });
+                        $("#modal").modal('hide');
+                    },
+                    error: function (xhr, status, error) {
+                        console.warn(error);
+                    }
+                });
+            }
         }
     });
 
     var app_sample = new Vue({
         el: "#modal_sample",
-        data: sample_data
+        data: sample_data,
+        methods: {
+            upload: function () {
+                var changed_example = [];
+                for (var i in this.sample_list) {
+                    var sample = this.sample_list[i];
+                    var orgin_sample = this.orgin_list[i];
+                    if (orgin_sample) {
+                        var temp = {};
+                        for (var j in sample) {
+                            sample[j] != orgin_sample[j] && (temp[j] = sample[j]);
+                        }
+                        $.isEmptyObject(temp) || changed_example.push(temp) && (temp.id = sample.id);
+                    } else {
+                        changed_example.push(sample);
+                    }
+                }
+                if (!changed_example.length) {
+                    $("#modal_sample").modal('hide');
+                    return;
+                }
+                $.ajax({
+                    url: "/api/example?" + "interface=" + sample_data.id,
+                    type: "put",
+                    contentType: "application/json",
+                    data: JSON.stringify(changed_example),
+                    success: function (data, status) {
+                        $("#modal_sample").modal('hide');
+                    },
+                    error: function (xhr, status, error) {
+                        console.warn(error);
+                    }
+                });
+            }
+        }
     });
 
     getDevelopers();
@@ -59,41 +124,6 @@
             $("#modal").modal("show");
     }
 
-    window.upload = function () {
-        var method, postfix;
-        if (app_data.id) {
-            method = "put";
-            postfix = "/" + app_data.id;
-            var changed = false;
-            for (var i in app_data.info) {
-                changed |= (app_data.info[i] != orgin_data.intfcl[i]);
-                if (changed) break;
-            }
-            if (!changed) {
-                $("#modal").modal('hide');
-                return;
-            }
-        } else {
-            method = "post";
-            postfix = "";
-        }
-
-        app_data.info.developerId = app_data.selectedDeveloper.id;
-
-        $.ajax({
-            url: "/api/interface" + postfix,
-            type: method,
-            data: app_data.info,
-            success: function (data, status) {
-                $("#data_list").bootstrapTable('refresh', { silent: true });
-                $("#modal").modal('hide');
-            },
-            error: function (xhr, status, error) {
-                console.warn(error);
-            }
-        });
-    }
-
     window.mod = function (id) {
         $("#modal").modal("show");
         $.get("/api/interface/" + id, function (data, status) {
@@ -101,11 +131,12 @@
             for (var i in app_data.info) {
                 app_data.info[i] = data[i];
             }
+
             app_data.selectedDeveloper = (app_data.developers.filter(function (item) {
                 return item.id == data.id;
             })[0] || null);
 
-            orgin_data.intfcl = data;
+            app.orgin_info = data;
         });
     }
 
@@ -133,7 +164,7 @@
                 return result;
             });
             sample_data.id = id;
-            orgin_data.sample = data;
+            sample_data.orgin_list = data;
             Vue.nextTick(function () {
                 $("#modal_sample .switch").bootstrapSwitch();
                 $("#modal_sample .name").each(function (i, e) {
@@ -142,35 +173,6 @@
             });
         });
         $("#modal_sample").modal('show');
-    }
-
-    window.example_upload = function () {
-        var changed_example = [];
-        for (var i in sample_data.sample_list) {
-            var sample = sample_data.sample_list[i];
-            var orgin_sample = orgin_data.sample[i];
-            if (orgin_sample) {
-                var temp = {};
-                for (var j in sample) {
-                    sample[j] != orgin_sample[j] && (temp[j] = sample[j]);
-                }
-                $.isEmptyObject(temp) || changed_example.push(temp) && (temp.id = sample.id);
-            } else {
-                changed_example.push(sample);
-            }
-        }
-        $.ajax({
-            url: "/api/example?" + "interface=" + sample_data.id,
-            type: "put",
-            contentType: "application/json",
-            data: JSON.stringify(changed_example),
-            success: function (data, status) {
-                $("#modal_sample").modal('hide');
-            },
-            error: function (xhr, status, error) {
-                console.warn(error);
-            }
-        });
     }
 })();
 
