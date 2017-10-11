@@ -4,19 +4,22 @@ const { update } = require("../proxy_server");
 exports.path = "/api/example";
 var handlers = {
     get: function (req, res) {
-        var options;
-        if (req.query.interface) {
-            options = {
-                where: {
-                    interfaceId: req.query.interface
-                }
+        var options = {
+            attributes: ['id', 'name'],
+            include: {
+                model: interface,
+                attributes: ['name']
             }
-        } else {
-            options = {
-                attributes: ['id', 'name'],
-                include: {
-                    model: interface,
-                    attributes: ['name']
+        };
+        if (req.query.interface) {
+            options.where = {
+                interfaceId: req.query.interface
+            }
+
+        } else if (req.query.name) {
+            options.where = {
+                name: {
+                    $like: `%${req.query.name}%`
                 }
             }
         }
