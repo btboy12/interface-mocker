@@ -1,0 +1,78 @@
+#interface_modal.modal.fade
+    .modal-dialog.modal-lg
+        .modal-content
+            .modal-body
+                .panel.panel-primary
+                    .panel-heading
+                        h3.panel-title 基本信息
+                    form.panel-body.form-horizontal
+                        //- .form-group
+                        //-     label.control-label.col-sm-2(for='description') 描述
+                        //-     .col-sm-10
+                        //-         textarea.form-control(type='text', name='description' v-model='description')
+                        //- .form-group
+                        //-     label.control-label.col-sm-2(for='interfaceClassId') 所属
+                        //-     .col-sm-10
+                        //-         select.form-control(name='interfaceClassId' v-model='interfaceClassId')
+                        //- .form-group
+                        //-     label.control-label.col-sm-2(for='code') 返回代码
+                        //-     .col-sm-10
+                        //-         select.form-control(name='code')
+                        .form-group
+                            label.control-label.col-sm-2(for='name') 接口名
+                            .col-sm-10
+                                input.form-control(type='text', name='name', v-model='info.name')
+                        .form-group
+                            label.control-label.col-sm-2(for='addr') 接口地址
+                            .col-sm-10
+                                input.form-control(type='text', name='addr', v-model='info.router')
+                        .form-group
+                            label.control-label.col-sm-2(for='method') 请求方法
+                            .col-sm-10
+                                v-select(name='method', v-model='info.method', label='name', :options="['get','head','post','put','delete','connect','options','trace','patch']")
+                        .form-group
+                            label.control-label.col-sm-2(for='developerId') 开发者
+                            .col-sm-10
+                                v-select(name='developerId', v-model='selectedDeveloper', label='name', :options='developers', :on-search='getDevelopers')
+                //- .panel.panel-info
+                //-     .panel-heading
+                //-         h3.panel-title 请求参数
+                //-     #req_info.panel-body.row
+                //-         span.col-xs-1
+                //-             table.table.table-striped.table-bordered
+                //-                 thead
+                //-                     tr
+                //-                         th &nbsp;
+                //-                 tbody#req_info_del
+                //-         span.col-xs-11
+                //-             table.table.table-striped.table-bordered
+                //-                 thead
+                //-                     tr
+                //-                         th 参数名
+                //-                         th 参数类型
+                //-                         th 注释
+                //-                 tbody#req_info_content
+                //-         button.btn.btn-default(onclick="addReqInfo(event)") 添加
+                //- .panel.panel-success
+                //-     .panel-heading
+                //-         h3.panel-title 返回数据
+                //-     #res_info.panel-body.row
+                //-         span.col-xs-1
+                //-             table.table.table-striped.table-bordered
+                //-                 thead
+                //-                     tr
+                //-                         th &nbsp;
+                //-                 tbody#res_info_del
+                //-         span.col-xs-11
+                //-             table.table.table-striped.table-bordered
+                //-                 thead
+                //-                     tr
+                //-                         th 参数名
+                //-                         th 参数类型
+                //-                         th 注释
+                //-                 tbody#res_info_content
+                //-         button.btn.btn-default(onclick="addResInfo(event)") 添加
+            .modal-footer
+                button.btn.btn-default(type='button', data-dismiss='modal') 取消
+                button.btn.btn-primary(type='button', @click='upload()') 确定
+script(src="/js/interface_modal.js")
