@@ -9,23 +9,28 @@ var handlers = {
             include: {
                 model: interface,
                 attributes: ['name']
-            }
+            },
+            offset: req.query.offset,
+            limit: req.query.limit
         };
         if (req.query.interface) {
             options.where = {
                 interfaceId: req.query.interface
             }
 
-        } else if (req.query.name) {
+        } else if (req.query.search) {
             options.where = {
                 name: {
-                    $like: `%${req.query.name}%`
+                    $like: `%${req.query.search}%`
                 }
             }
         }
-        example.findAll(options)
+        example.findAndCountAll(options)
             .then(function (results) {
-                res.json(results);
+                res.json({
+                    total: results.count,
+                    rows: results.rows
+                });
             }).catch(function (err) {
                 console.error(err);
                 res.status(500).send();

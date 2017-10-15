@@ -3,13 +3,14 @@ const { interface, developer, orm } = require("../mapper.js");
 exports.path = "/api/interface";
 var handlers = {
     get: function (req, res) {
-        interface.findAll({
+        var options = {
             attributes: ['id', 'name', 'router'],
             include: {
                 model: developer,
                 attributes: ['name']
             }
-        }).then(function (results) {
+        };
+        interface.findAll(options).then(function (results) {
             res.json(results);
         }).catch(function (err) {
             console.error(err);

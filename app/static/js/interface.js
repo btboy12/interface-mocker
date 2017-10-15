@@ -1,62 +1,9 @@
 (function () {
-    Vue.component('v-select', VueSelect.VueSelect);
-    var app_data = {
-        id: null,
-        info: {
-            name: null,
-            router: null,
-            method: null,
-            developerId: null
-        },
-        orgin_info: {},
-        selectedDeveloper: null,
-        developers: []
-    }
-
     var sample_data = {
         id: null,
         sample_list: [],
         orgin_list: []
     }
-
-    var app = new Vue({
-        el: "#modal",
-        data: app_data,
-        methods: {
-            getDevelopers: getDevelopers,
-            upload: function () {
-                var method, postfix;
-                app_data.info.developerId = app_data.selectedDeveloper.id;
-                if (app_data.id) {
-                    method = "put";
-                    postfix = "/" + app_data.id;
-                    var temp = {};
-                    for (var i in app_data.info) {
-                        app_data.info[i] != app_data.orgin_info[i] && (temp[i] = app_data.info[i]);
-                    }
-                    if ($.isEmptyObject(temp)) {
-                        $("#modal").modal('hide');
-                        return;
-                    }
-                } else {
-                    method = "post";
-                    postfix = "";
-                }
-                $.ajax({
-                    url: "/api/interface" + postfix,
-                    type: method,
-                    data: app_data.info,
-                    success: function (data, status) {
-                        $("#data_list").bootstrapTable('refresh', { silent: true });
-                        $("#modal").modal('hide');
-                    },
-                    error: function (xhr, status, error) {
-                        console.warn(error);
-                    }
-                });
-            }
-        }
-    });
 
     var app_sample = new Vue({
         el: "#modal_sample",
@@ -97,16 +44,6 @@
         }
     });
 
-    getDevelopers();
-
-    function getDevelopers(search, loading) {
-        loading && loading(true);
-        $.get("/api/developer", function (data, status) {
-            app_data.developers = data;
-            loading && loading(false);
-        });
-    }
-
     window.getButton = function (value, row, index) {
         return "<button class='btn btn-warning' onclick='del(event," + row.id + ")'>删除</button>\
                 <button class='btn btn-primary' onclick='mod("+ row.id + ")'>修改</button>\
@@ -114,29 +51,15 @@
     }
 
     window.add = function () {
-        app_data.id = null;
-        app_data.info = {
-            name: null,
-            router: null,
-            method: null,
-            developerId: null
-        },
-            $("#modal").modal("show");
+        window.interface_modal.clear();
+        window.interface_modal.show();
+
     }
 
     window.mod = function (id) {
-        $("#modal").modal("show");
         $.get("/api/interface/" + id, function (data, status) {
-            app_data.id = id;
-            for (var i in app_data.info) {
-                app_data.info[i] = data[i];
-            }
-
-            app_data.selectedDeveloper = (app_data.developers.filter(function (item) {
-                return item.id == data.id;
-            })[0] || null);
-
-            app.orgin_info = data;
+            window.interface_modal.set(data.id, data);
+            window.interface_modal.show();
         });
     }
 

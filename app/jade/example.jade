@@ -9,7 +9,7 @@ html
         .container
             #toolbar.btn-group
                 btn.btn.btn-primary(onclick='add()') 添加
-            table#data_list(data-toggle='table', data-toolbar='#toolbar', data-url='/api/example')
+            table#data_list(data-toggle='table', data-toolbar='#toolbar', data-url='/api/example', data-search=true, data-pagination=true, data-side-pagination="server")
                 thead
                     tr
                         th(data-field='name') 样例名
