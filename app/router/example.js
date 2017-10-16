@@ -5,7 +5,7 @@ exports.path = "/api/example";
 var handlers = {
     get: function (req, res) {
         var options = {
-            attributes: ['id', 'name'],
+            attributes: ['id', 'name', 'inUse'],
             include: {
                 model: interface,
                 attributes: ['name']

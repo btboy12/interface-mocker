@@ -3,12 +3,7 @@ const pathToRegexp = require('path-to-regexp');
 const { developer, interface, example } = require('./mapper');
 const routers = {};
 
-interface.findAll({
-    include: {
-        model: developer,
-        attributes: ['addr', "port"]
-    }
-}).then(interfaces => {
+interface.findAll().then(interfaces => {
     for (var intfcl of interfaces) {
         routers[intfcl.id] = new Layer(intfcl);
     }
@@ -36,6 +31,11 @@ const app = http.createServer(function (req, res) {
                 }, function (_res) {
                     res.writeHead(_res.statusCode, _res.headers)
                     _res.pipe(res);
+                }).on("error", err => {
+                    console.error(err);
+                    res.statusCode = 400;
+                    res.write("Remote Request Failed");
+                    res.end();
                 }).end();
                 return;
             }
@@ -50,10 +50,10 @@ function Layer(data) {
     var _ = this;
     _.id = data.id;
     _.reg = pathToRegexp(data.router);
-    _.developer = data.developer.get({ plain: true });
     _.method = data.method;
+    _.developerId = data.developerId;
 
-    _.setResponse = function setResponse() {
+    _.update = function () {
         example.findAll({
             attributes: ['cookies', 'content', 'code'],
             where: {
@@ -63,9 +63,12 @@ function Layer(data) {
         }).then(function (examples) {
             _.response = examples;
         });
+        developer.findById(_.developerId, { attributes: ["addr", "port"] }).then(result => {
+            _.developer = result.get({ plain: true });
+        });
     };
 
-    _.setResponse();
+    _.update();
 }
 
 exports.start = function (port) {
@@ -77,9 +80,9 @@ exports.stop = function () {
     app.close();
 }
 
-exports.update = function (key) {
+exports.update = function (key, param) {
     if (routers[key]) {
-        routers[key].setResponse();
+        routers[key].update(param);
     } else {
         interface.findById(key, {
             include: {
