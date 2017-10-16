@@ -4,15 +4,20 @@ exports.path = "/api/proxy_server";
 
 var handlers = {
     put: function (req, res) {
-        if (true === req.body.switch) {
-            proxy_server.start();
-            res.status(200);
-        } else if (false === req.body.switch) {
-            proxy_server.stop();
-            res.status(200);
+        if (typeof (req.body.switch) === "string") {
+            if ("on" === req.body.switch.toLowerCase()) {
+                proxy_server.start(8081);
+                res.status(201);
+            } else if ("off" === req.body.switch.toLowerCase()) {
+                proxy_server.stop();
+                res.status(200);
+            } else {
+                res.status(400);
+            }
         } else {
             res.status(400);
         }
+
         res.end();
     }
 }

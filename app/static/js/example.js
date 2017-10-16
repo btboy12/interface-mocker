@@ -58,6 +58,12 @@
             for (var i in app_data.info) {
                 app_data.info[i] = data[i];
             }
+            for (var intfcl of app_data.interfaces) {
+                if (intfcl.id == data.interfaceId) {
+                    app_data.selectedInterface = intfcl;
+                    break;
+                }
+            }
         });
         $("#modal").modal('show');
     }
