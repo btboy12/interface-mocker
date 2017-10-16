@@ -18,12 +18,11 @@
         methods: {
             getDevelopers: getDevelopers,
             upload: function () {
-                var method, postfix;
+                var method, postfix, temp = {};
                 app.info.developerId = app.selectedDeveloper.id;
                 if (app.id) {
-                    method = "put";
+                    method = "patch";
                     postfix = "/" + app.id;
-                    var temp = {};
                     for (var i in app.info) {
                         app.info[i] != app.orgin_info[i] && (temp[i] = app.info[i]);
                     }
@@ -34,11 +33,12 @@
                 } else {
                     method = "post";
                     postfix = "";
+                    temp = app.info;
                 }
                 $.ajax({
                     url: "/api/interface" + postfix,
                     type: method,
-                    data: app.info,
+                    data: temp,
                     success: function (data, status) {
                         $("#data_list").bootstrapTable('refresh', { silent: true });
                         $("#interface_modal").modal('hide');
@@ -72,19 +72,22 @@
             };
             app.selectedDeveloper = null;
         },
-        set: function (id, data) {
+        set: function (id, info) {
             app.id = id;
             for (var i in app.info) {
-                app.info[i] = data[i];
+                app.info[i] = info[i];
             }
             app.selectedDeveloper = (app.developers.filter(function (item) {
-                return item.id == data.id;
+                return item.id == info.id;
             })[0] || null);
 
-            app.orgin_info = data;
+            app.orgin_info = info;
         },
         show: function () {
             $("#interface_modal").modal('show');
+        },
+        hide: function () {
+            $("#interface_modal").modal('hide');
         }
     }
 })();

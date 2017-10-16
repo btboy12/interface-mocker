@@ -12,7 +12,7 @@ var handlers = {
                 res.status(500).send();
             });
     },
-    put: function (req, res) {
+    patch: function (req, res) {
         example.update(req.body, {
             where: {
                 id: req.params.id
