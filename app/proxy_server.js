@@ -78,7 +78,18 @@ exports.stop = function () {
 }
 
 exports.update = function (key) {
-    routers[key].setResponse();
+    if (routers[key]) {
+        routers[key].setResponse();
+    } else {
+        interface.findById(key, {
+            include: {
+                model: developer,
+                attributes: ['addr', "port"]
+            }
+        }).then((interface) => {
+            interface && (routers[interface.id] = new Layer(interface));
+        });
+    }
 }
 
 exports.del = function (key) {

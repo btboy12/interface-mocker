@@ -1,4 +1,5 @@
 const { example } = require("../mapper.js");
+const { update } = require("../proxy_server");
 
 exports.path = "/api/example/:id";
 
@@ -17,7 +18,8 @@ var handlers = {
             where: {
                 id: req.params.id
             }
-        }).then(function () {
+        }).then(function (result) {
+            update(result.id);
             res.sendStatus(200);
         }).catch(function (err) {
             console.warn(err);

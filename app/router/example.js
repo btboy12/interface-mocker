@@ -1,4 +1,4 @@
-const { example, interface, orm } = require("../mapper.js");
+const { example, interface, orm } = require("../mapper");
 const { update } = require("../proxy_server");
 
 exports.path = "/api/example";
@@ -38,7 +38,8 @@ var handlers = {
     },
     post: function (req, res) {
         example.create(req.body)
-            .then(function (results) {
+            .then(function (result) {
+                update(result.id);
                 res.sendStatus(200);
             }).catch(function (err) {
                 console.error(err);

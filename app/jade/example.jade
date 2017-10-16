@@ -5,10 +5,12 @@ html
     body
 -     var page='example'
         include ./public/header.jade
+        script(src="/public/js/select2.min.js")
         script(src="/public/js/vue-select.js")
         .container
             #toolbar.btn-group
                 btn.btn.btn-primary(onclick='add()') 添加
+                select#interface
             table#data_list(data-toggle='table', data-toolbar='#toolbar', data-url='/api/example', data-search=true, data-pagination=true, data-side-pagination="server")
                 thead
                     tr
