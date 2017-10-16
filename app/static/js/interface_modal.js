@@ -22,7 +22,7 @@
                 app.info.developerId = app.selectedDeveloper.id;
                 if (app.id) {
                     method = "put";
-                    postfix = "/" + ap.id;
+                    postfix = "/" + app.id;
                     var temp = {};
                     for (var i in app.info) {
                         app.info[i] != app.orgin_info[i] && (temp[i] = app.info[i]);
@@ -41,7 +41,7 @@
                     data: app.info,
                     success: function (data, status) {
                         $("#data_list").bootstrapTable('refresh', { silent: true });
-                        $("#modal").modal('hide');
+                        $("#interface_modal").modal('hide');
                     },
                     error: function (xhr, status, error) {
                         console.warn(error);
