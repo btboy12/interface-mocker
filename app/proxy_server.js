@@ -2,6 +2,7 @@ const http = require('http');
 const pathToRegexp = require('path-to-regexp');
 const { developer, interface, example } = require('./mapper');
 const routers = {};
+var server_info = {};
 
 interface.findAll().then(interfaces => {
     for (var intfcl of interfaces) {
@@ -73,11 +74,17 @@ function Layer(data) {
 
 exports.start = function (port) {
     app.listen(port);
-    console.info(`proxy server listen on ${port}`)
+    exports.info = {
+        port: port,
+        startTime: Date.now()
+    };
+    console.info(`proxy server listen on ${port}`);
 }
 
 exports.stop = function () {
     app.close();
+    exports.info = {};
+    console.info(`proxy server stop`);
 }
 
 exports.update = function (key, param) {

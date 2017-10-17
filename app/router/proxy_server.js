@@ -3,6 +3,9 @@ const proxy_server = require("../proxy_server");
 exports.path = "/api/proxy_server";
 
 var handlers = {
+    get: function (req, res) {
+        res.json(proxy_server.info);
+    },
     put: function (req, res) {
         if (typeof (req.body.switch) === "string") {
             if ("on" === req.body.switch.toLowerCase()) {

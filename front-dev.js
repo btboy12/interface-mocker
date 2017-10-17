@@ -1,5 +1,4 @@
 const express = require('express');
-const bodyParser = require("body-parser");
 const fs = require("fs");
 const proxyServer = require("./app/proxy_server");
 const http = require("http");
@@ -12,8 +11,6 @@ var host = "211.83.110.4";
 var port = 8081;
 
 app.use(express.static('app/static'));
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
 app.set('views', jade_path);
 app.set('view engine', 'jade');
 
