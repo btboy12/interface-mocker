@@ -10,19 +10,15 @@ var handlers = {
                 model: interface,
                 attributes: ['name']
             },
+            where: {},
             offset: req.query.offset,
             limit: req.query.limit
         };
         if (req.query.interface) {
-            options.where = {
-                interfaceId: req.query.interface
-            }
-
+            options.where.interfaceId = req.query.interface;
         } else if (req.query.search) {
-            options.where = {
-                name: {
-                    $like: `%${req.query.search}%`
-                }
+            options.where.name = {
+                $like: `%${req.query.search}%`
             }
         }
         example.findAndCountAll(options)
