@@ -50,7 +50,6 @@ var example = orm.define("example", {
     inUse: { type: Sequelize.BOOLEAN, allowNull: false, validate: { notEmpty: true }, defaultValue: false },
     cookies: { type: Sequelize.STRING },
     content: { type: Sequelize.STRING },
-    description: { type: Sequelize.STRING }
 });
 example.belongsTo(interface);
 

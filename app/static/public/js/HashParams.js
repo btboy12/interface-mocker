@@ -1,6 +1,13 @@
-function getHashParams() {
+// 将地址栏的hash转换为字典。例：
+// id=1&name=test
+// =>
+// {id:1,name:'test'}
+// 如果没有传入参数，则直接取地址栏的hash
+
+function getHashParams(hash) {
     var params = {};
-    var pairs = document.location.hash.split("&");
+    var hash = hash || document.location.hash;
+    var pairs = hash.split("&");
     for (var i in pairs) {
         var paramStr = pairs[i];
         if (paramStr.indexOf("=") > 0) {
@@ -9,6 +16,10 @@ function getHashParams() {
         }
     }
 }
+// 将字典转化为hash。例：
+// {id:1,name:'test'}
+// =>
+// id=1&name=test
 
 function parseHashParams(params) {
     var list = [];
