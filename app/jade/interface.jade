@@ -8,6 +8,7 @@ html
         script(src="/public/js/bootstrap-switch.min.js")
         //- script(src="/public/i18n/zh-CN.js")
         script(src="/public/js/mindmup-editabletable.js")
+        script(src="/js/interface.js")
     body
 -     var page='interface'
         include ./public/header.jade
@@ -21,16 +22,7 @@ html
                         th(data-field="router") 接口地址
                         th(data-field="developer.name") 开发者
                         th(data-formatter='getButton') 操作
-                tbody
-                     tr
-                        td 测试
-                        td /v1/test
-                        td 老子
-                        td
-                            .function-button
-                                btn.btn.btn-warning(onclick='add()') 添加
-                                btn.btn.btn-primary(onclick='add()') 修改
-                                btn.btn.btn-primary.return-button(onclick='add()') 返回样例   
+                
         include ./modal/interface.jade
         #modal_sample.modal.fade
             .modal-dialog.modal-lg
