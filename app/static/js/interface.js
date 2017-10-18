@@ -47,7 +47,7 @@
     window.getButton = function (value, row, index) {
         return "<button class='btn btn-warning' onclick='del(event," + row.id + ")'>删除</button>\
                 <button class='btn btn-primary' onclick='mod("+ row.id + ")'>修改</button>\
-                <button class='btn btn-primary return-button' onclick='toInterface()'>返回样例</button>";
+                <button class='btn btn-primary return-button' onclick='toInterface("+ row.id + ")'>返回样例</button>";
     }
 
     window.add = function () {
@@ -60,6 +60,13 @@
         $.get("/api/interface/" + id, function (data, status) {
             window.interface_modal.set(data.id, data);
             window.interface_modal.show();
+        });
+    }
+
+    window.toInterface = function (id) {
+        $.get("/api/interface/" + id, function (data, status) {
+            var interfaceValue=data.router;
+            location.href="/example"+interfaceValue+"=1";
         });
     }
 
@@ -101,7 +108,6 @@
 
 $("#req_info").editableTableWidget();
 
-
 $('#req_info_content').on('nextStep', function (event) {
     var target = $(event.target);
     var parent = target.parent();
@@ -119,12 +125,6 @@ function addReqInfo(event) {
     $("#req_info_content").append("<tr><td>&nbsp;</td><td></td><td></td></tr>");
     $("#req_info_content").editableTableWidget();
 }
-
-function toInterface(){
-    var interfaceValue=$(this).parent().parent().parent().children("td").eq(1).html();
-    location.href="/example"+interfaceValue+"=1";
-    //window.open('/example'+interfaceValue+'=1');
- }
 
 function delReqInfo(id) {
     current.reqInfo.slice(id, 1);
