@@ -99,6 +99,12 @@
     }
 })();
 
+$("#data_list .return-button").click(function(){
+    var interfaceValue=$(this).parent().parent().parent().children("td").eq(1).html();
+    location.href="/example"+interfaceValue+"=1";
+    //window.open('/example'+interfaceValue+'=1');
+ });
+
 $("#req_info").editableTableWidget();
 
 
