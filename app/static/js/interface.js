@@ -47,7 +47,7 @@
     window.getButton = function (value, row, index) {
         return "<button class='btn btn-warning' onclick='del(event," + row.id + ")'>删除</button>\
                 <button class='btn btn-primary' onclick='mod("+ row.id + ")'>修改</button>\
-                <button class='btn btn-primary' onclick='sample("+ row.id + ")'>返回样例</button>";
+                <button class='btn btn-primary return-button' onclick='toInterface()'>返回样例</button>";
     }
 
     window.add = function () {
@@ -119,6 +119,12 @@ function addReqInfo(event) {
     $("#req_info_content").append("<tr><td>&nbsp;</td><td></td><td></td></tr>");
     $("#req_info_content").editableTableWidget();
 }
+
+function toInterface(){
+    var interfaceValue=$(this).parent().parent().parent().children("td").eq(1).html();
+    location.href="/example"+interfaceValue+"=1";
+    //window.open('/example'+interfaceValue+'=1');
+ }
 
 function delReqInfo(id) {
     current.reqInfo.slice(id, 1);
