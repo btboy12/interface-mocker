@@ -78,7 +78,7 @@
                 app.info[i] = info[i];
             }
             app.selectedDeveloper = (app.developers.filter(function (item) {
-                return item.id == info.id;
+                return item.id == info.developerId;
             })[0] || null);
 
             app.orgin_info = info;
