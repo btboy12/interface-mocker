@@ -12,7 +12,7 @@ function getHashParams(hash) {
         var paramStr = pairs[i];
         if (paramStr.indexOf("=") > 0) {
             var kv = paramStr.split("=");
-            params[kv[0]] = kv[1];
+            params[kv[0]] = decodeURIComponent(kv[1]);
         }
     }
 }
@@ -24,7 +24,7 @@ function getHashParams(hash) {
 function parseHashParams(params) {
     var list = [];
     for (var i in params) {
-        list.push(i + "=" + params[i]);
+        list.push(encodeURIComponent(i) + "=" + encodeURIComponent(params[i]));
     }
     return list.join("&");
 }
