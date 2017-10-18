@@ -1,53 +1,8 @@
 (function () {
-    var sample_data = {
-        id: null,
-        sample_list: [],
-        orgin_list: []
-    }
-
-    var app_sample = new Vue({
-        el: "#modal_sample",
-        data: sample_data,
-        methods: {
-            upload: function () {
-                var changed_example = [];
-                for (var i in this.sample_list) {
-                    var sample = this.sample_list[i];
-                    var orgin_sample = this.orgin_list[i];
-                    if (orgin_sample) {
-                        var temp = {};
-                        for (var j in sample) {
-                            sample[j] != orgin_sample[j] && (temp[j] = sample[j]);
-                        }
-                        $.isEmptyObject(temp) || changed_example.push(temp) && (temp.id = sample.id);
-                    } else {
-                        changed_example.push(sample);
-                    }
-                }
-                if (!changed_example.length) {
-                    $("#modal_sample").modal('hide');
-                    return;
-                }
-                $.ajax({
-                    url: "/api/example?" + "interface=" + sample_data.id,
-                    type: "put",
-                    contentType: "application/json",
-                    data: JSON.stringify(changed_example),
-                    success: function (data, status) {
-                        $("#modal_sample").modal('hide');
-                    },
-                    error: function (xhr, status, error) {
-                        console.warn(error);
-                    }
-                });
-            }
-        }
-    });
-
     window.getButton = function (value, row, index) {
         return "<button class='btn btn-warning' onclick='del(event," + row.id + ")'>删除</button>\
                 <button class='btn btn-primary' onclick='mod("+ row.id + ")'>修改</button>\
-                <button class='btn btn-primary return-button' onclick='toInterface("+ row.id + ")'>返回样例</button>";
+                <a class='btn btn-primary' href='/example#"+ parseHashParams({ interfaceId: row.id }) + "'>返回样例</a>";
     }
 
     window.add = function () {
@@ -65,8 +20,8 @@
 
     window.toInterface = function (id) {
         $.get("/api/interface/" + id, function (data, status) {
-            var interfaceValue=data.router;
-            location.href="/example"+interfaceValue+"=1";
+            var interfaceValue = data.router;
+            location.href = "/example" + interfaceValue + "=1";
         });
     }
 
