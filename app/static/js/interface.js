@@ -2,7 +2,7 @@
     window.getButton = function (value, row, index) {
         return "<button class='btn btn-warning' onclick='del(event," + row.id + ")'>删除</button>\
                 <button class='btn btn-primary' onclick='mod("+ row.id + ")'>修改</button>\
-                <a class='btn btn-primary' href='/example#"+ parseHashParams({ interfaceId: row.id }) + "'>返回样例</a>";
+                <a class='btn btn-primary' onclick='toInterface("+ row.id + ")'>返回样例</a>";
     }
 
     window.add = function () {
@@ -19,9 +19,8 @@
     }
 
     window.toInterface = function (id) {
-        $.get("/api/interface/" + id, function (data, status) {
-            var interfaceValue = data.router;
-            location.href = "/example" + interfaceValue + "=1";
+        $.get("/api/interface/" + id, function (data) {     
+            location.href = "/example#interfaceId=" + id;
         });
     }
 
