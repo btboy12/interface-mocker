@@ -1,4 +1,5 @@
 const { interface } = require("../mapper.js");
+const { update } = require("../proxy_server");
 
 exports.path = "/api/interface/:id";
 
@@ -18,6 +19,7 @@ var handlers = {
                 id: req.params.id
             }
         }).then(function () {
+            update(req.params.id);
             res.sendStatus(200);
         }).catch(function (err) {
             console.warn(err);
