@@ -10,6 +10,7 @@
   "author": "btboy12",
   "license": "ISC",
   "dependencies": {
+    "argv": "0.0.2",
     "body-parser": "^1.17.2",
     "cookie-parser": "^1.4.3",
     "docxtemplater": "^3.1.5",
@@ -18,7 +19,7 @@
     "orm": "^3.2.4",
     "path-to-regexp": "^2.0.0",
     "sequelize": "^4.5.0",
-    "sqlite3": "^3.1.8",
+    "sqlite3": "^3.1.13",
     "trek-captcha": "^0.3.0"
   }
 }
