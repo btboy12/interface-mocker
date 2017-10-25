@@ -19,7 +19,7 @@ for (var jade of fs.readdirSync(jade_path)) {
     ((jade1) => {
         if (jade1.indexOf('.') > 0) {
             var j = jade1.split('.')[0]
-            app.get(`/${j}`, function (req, res) {
+            app.get(`/${j}`,  (req, res) => {
                 // res.sendFile(`${process.cwd()}/app/static/html/${url}.html`);
                 res.render(j);
             });
@@ -43,9 +43,8 @@ app.get('/', function (req, res) {
     res.redirect('/developer');
 });
 
-var server = app.listen(8000, function () {
-    console.info("server running on :8000");
-    proxyServer.start(8081)
+var server = app.listen(80, function () {
+    console.info("server running on :80");
 });
 
 function proxy(req, res) {
@@ -58,5 +57,11 @@ function proxy(req, res) {
     }, function (_res) {
         res.writeHead(_res.statusCode, _res.headers)
         _res.pipe(res);
-    }).end();
+    }).on("error", err => {
+        console.error(err);
+        res.statusCode = 400;
+        res.write("Remote Request Failed");
+        res.end();
+    });
+    req.pipe(_req);
 }

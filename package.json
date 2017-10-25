@@ -12,6 +12,7 @@
   "dependencies": {
     "argv": "0.0.2",
     "body-parser": "^1.17.2",
+    "cookie-parser": "^1.4.3",
     "docxtemplater": "^3.1.5",
     "express": "^4.15.3",
     "jade": "^1.11.0",

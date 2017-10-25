@@ -42,28 +42,28 @@ var handlers = {
                 res.sendStatus(500);
             })
     },
-    put: function (req, res) {
-        orm.transaction(function (t) {
-            return Promise.all(req.body.map(function (item) {
-                if (item.id) {
-                    return example.update(item, {
-                        where: {
-                            id: item.id
-                        }
-                    })
-                }
-                else {
-                    example.create(item);
-                }
-            }));
-        }).then(function () {
-            update(req.query.interface);
-            res.sendStatus(200);
-        }).catch(function (err) {
-            console.warn(err);
-            res.sendStatus(500);
-        });
-    }
+    // put: function (req, res) {
+    //     orm.transaction(function (t) {
+    //         return Promise.all(req.body.map(function (item) {
+    //             if (item.id) {
+    //                 return example.update(item, {
+    //                     where: {
+    //                         id: item.id
+    //                     }
+    //                 })
+    //             }
+    //             else {
+    //                 example.create(item);
+    //             }
+    //         }));
+    //     }).then(function () {
+    //         update(req.query.interface);
+    //         res.sendStatus(200);
+    //     }).catch(function (err) {
+    //         console.warn(err);
+    //         res.sendStatus(500);
+    //     });
+    // }
 }
 exports.handlers = handlers;
 

@@ -43,7 +43,7 @@ var interface = orm.define('interface', {
     method: { type: Sequelize.STRING, allowNull: false, validate: { notEmpty: true } },
     statuses: { type: Sequelize.STRING },
     reqInfo: { type: Sequelize.STRING },
-    reqInfo: { type: Sequelize.STRING },
+    resInfo: { type: Sequelize.STRING },
     description: { type: Sequelize.STRING },
     inUse: { type: Sequelize.BOOLEAN, allowNull: false, validate: { notEmpty: true }, defaultValue: true },
 });

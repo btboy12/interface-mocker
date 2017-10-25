@@ -1,4 +1,5 @@
 const express = require('express');
+const cookieParse = require('cookie-parser');
 const bodyParser = require("body-parser");
 const fs = require("fs");
 const proxyServer = require("./app/proxy_server");
@@ -9,6 +10,8 @@ const jade_path = "./app/jade"
 var app = express();
 
 app.use(express.static('app/static'));
+app.use(extractIP);
+app.use(cookieParse());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.set('views', jade_path);
@@ -37,7 +40,7 @@ for (var jade of fs.readdirSync(jade_path)) {
                 res.render(j);
             });
         }
-    })(jade)
+    })(jade);
 }
 
 for (var file of fs.readdirSync(router_path)) {
@@ -60,3 +63,14 @@ var server = app.listen(options.port || 8000, function () {
     console.info("server running on :8000");
     proxyServer.start(options.proxy || 8081)
 });
+
+function extractIP(req, res, next) {
+    if (!req.cookies || !req.cookies.ip) {
+        res.cookie('ip', req.headers['x-forwarded-for'] ||
+            req.ip ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress || '');
+    }
+    next();
+}

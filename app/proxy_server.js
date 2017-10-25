@@ -37,7 +37,8 @@ const app = http.createServer(function (req, res) {
                     res.statusCode = 400;
                     res.write("Remote Request Failed");
                     res.end();
-                }).end();
+                });
+                req.pipe(_req);
                 return;
             }
         }
@@ -55,6 +56,15 @@ function Layer(data) {
     _.developerId = data.developerId;
 
     _.update = function () {
+        interface.findById(_.id).then(result => {
+            _.reg = pathToRegexp(result.router);
+            _.method = result.method;
+            _.developerId = result.developerId;
+            init();
+        });
+    };
+
+    function init() {
         example.findAll({
             attributes: ['cookies', 'content', 'code'],
             where: {
@@ -67,9 +77,9 @@ function Layer(data) {
         developer.findById(_.developerId, { attributes: ["addr", "port"] }).then(result => {
             _.developer = result.get({ plain: true });
         });
-    };
+    }
 
-    _.update();
+    init();
 }
 
 exports.start = function (port) {
@@ -91,12 +101,7 @@ exports.update = function (key, param) {
     if (routers[key]) {
         routers[key].update(param);
     } else {
-        interface.findById(key, {
-            include: {
-                model: developer,
-                attributes: ['addr', "port"]
-            }
-        }).then((interface) => {
+        interface.findById(key).then((interface) => {
             interface && (routers[interface.id] = new Layer(interface));
         });
     }
