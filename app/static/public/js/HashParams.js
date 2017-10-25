@@ -6,7 +6,7 @@
 
 function getHashParams(hash) {
     var params = {};
-    var hash = hash || document.location.hash;
+    var hash = hash || document.location.hash;  
     var pairs = hash.split("&");
     for (var i in pairs) {
         var paramStr = pairs[i];
