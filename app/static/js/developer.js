@@ -1,7 +1,8 @@
 (function () {
     window.getButton = function (value, row, index) {
         return "<button class='btn btn-warning' onclick='del(event," + row.id + ")'>删除</button>\
-                <button class='btn btn-primary' onclick='mod("+ row.id + ")'>修改</button>";
+                <button class='btn btn-primary' onclick='mod("+ row.id + ")'>修改</button>\
+                <a class='btn btn-primary' onclick='toDeveloper("+ row.id + ")'>所属接口</a>";
     }
 
     window.add = function () {
@@ -13,6 +14,12 @@
         $.get("/api/developer/" + id, function (data, status) {
             window.developer_modal.set(data.id, data);
             window.developer_modal.show();
+        });
+    }
+
+    window.toDeveloper = function (id) {
+        $.get("/api/developer/" + id, function (data) {     
+            location.href = "/interface?developerId=" + id; 
         });
     }
 
