@@ -37,7 +37,8 @@ const app = http.createServer(function (req, res) {
                     res.statusCode = 400;
                     res.write("Remote Request Failed");
                     res.end();
-                }).end();
+                });
+                req.pipe(_req);
                 return;
             }
         }

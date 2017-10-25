@@ -44,7 +44,6 @@ app.get('/', function (req, res) {
 
 var server = app.listen(8000, function () {
     console.info("server running on :8000");
-    proxyServer.start(8081)
 });
 
 function proxy(req, res) {
@@ -57,5 +56,11 @@ function proxy(req, res) {
     }, function (_res) {
         res.writeHead(_res.statusCode, _res.headers)
         _res.pipe(res);
-    }).end();
+    }).on("error", err => {
+        console.error(err);
+        res.statusCode = 400;
+        res.write("Remote Request Failed");
+        res.end();
+    });
+    req.pipe(_req);
 }

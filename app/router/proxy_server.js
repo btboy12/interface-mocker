@@ -6,11 +6,11 @@ var handlers = {
     get: function (req, res) {
         res.json(proxy_server.info);
     },
-    put: function (req, res) {
+    patch: function (req, res) {
         if (typeof (req.body.switch) === "string") {
             if ("on" === req.body.switch.toLowerCase()) {
                 proxy_server.start(8081);
-                res.status(201);
+                res.status(200);
             } else if ("off" === req.body.switch.toLowerCase()) {
                 proxy_server.stop();
                 res.status(200);
