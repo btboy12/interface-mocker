@@ -1,7 +1,7 @@
 $(document).ready(function(){
-    var oldInter=getUrl('interface');
+    var oldInter=getUrl('interfaceId');
     var oldSearch=getUrl('search');
-    var tableUrl='/api/example?interface='+oldInter;
+    var tableUrl='/api/example?interfaceId='+oldInter;
 
     $('#data_list').bootstrapTable({          //table表
         url:tableUrl,
@@ -14,7 +14,7 @@ $(document).ready(function(){
     });
 
     $('#searchWindow').bind('input propertychange', function() {  //动态修改url的参数
-        var newUrl= window.location.pathname + "?interface=" + getUrl('interface') + "&search=" + $("#searchWindow").val();
+        var newUrl= window.location.pathname + "?interfaceId=" + getUrl('interfaceId') + "&search=" + $("#searchWindow").val();
         window.history.pushState({},0,newUrl);
     });
 
@@ -26,7 +26,7 @@ $(document).ready(function(){
             var selecthtml='';
             selecthtml+='<option id="showAll" interfaceId="">查看全部</option>';
             $.each(data,function(commentIndex,comment){
-                if(getUrl('interface')==comment['id']){       //根据url更改select所选的option
+                if(getUrl('interfaceId')==comment['id']){       //根据url更改select所选的option
                     selecthtml+='<option selected="selected" interfaceId='+ comment['id'] + '>' + comment['name']+'</option>';
                 }
                 else{
@@ -39,7 +39,7 @@ $(document).ready(function(){
 
     $('#interfaceSelect').change(function(){
         var selectId = $('#interfaceSelect option:selected').attr('interfaceId');
-        var newUrl=window.location.pathname+"?interface=" + selectId + "&search=" + getUrl('search');
+        var newUrl=window.location.pathname+"?interfaceId=" + selectId + "&search=" + getUrl('search');
         if(selectId==""){                //如果不刷新，在非 查看全部 选项中，对search进行修改以后，再回到 查看全部，table就会无法加载数据
             window.location.href=newUrl;
         }
