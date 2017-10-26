@@ -1,12 +1,18 @@
 html
-    head
+    head 
         title 接口列表
         include ./public/common.jade
         link(rel='stylesheet', href='/css/interface.css')
+        link(rel='stylesheet', href='/public/css/bootstrap.css')
+        link(rel='stylesheet', href='/public/css/bootstrap-table.css')
         link(rel="stylesheet", href="public/css/bootstrap-switch.min.css")
         script(src="/public/js/vue-select.js")
+        script(src="/public/js/jquery.js")
+        script(src="/js/interface-search.js") 
+        script(src="/public/js/bootstrap.js")
+        script(src="/public/js/bootstrap-table-zh-CN.js")
+        script(src="/public/js/bootstrap-table.js")
         script(src="/public/js/bootstrap-switch.min.js")
-        //- script(src="/public/i18n/zh-CN.js")
         script(src="/public/js/mindmup-editabletable.js")
         script(src="/js/interface.js")
     body
@@ -15,7 +21,8 @@ html
         .container
             #toolbar.btn-group
                 btn.btn.btn-primary(onclick='add()') 添加
-            table#data_list(data-toggle='table', data-toolbar='#toolbar', data-url='/api/interface')
+                select#developerSelect
+            table#data_list
                 thead
                     tr
                         th(data-field="name") 接口名

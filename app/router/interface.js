@@ -16,7 +16,8 @@ var handlers = {
         };
         if (req.query.developerId) {
             options.where.developerId = req.query.developerId;
-        } else if (req.query.search) {
+        }
+        if (req.query.search) {
             options.where.name = {
                 $like: `%${req.query.search}%`
             }
