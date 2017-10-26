@@ -20,7 +20,7 @@
 
     window.toInterface = function (id) {
         $.get("/api/interface/" + id, function (data) {     
-            location.href = "/example?interface=" + id; 
+            location.href = "/example?interfaceId=" + id; 
         });
     }
 
