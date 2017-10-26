@@ -5,12 +5,10 @@ $(document).ready(function(){
     
     $('#data_list').bootstrapTable({          //table表
         url:tableUrl,
-        dataType: "json",
+        dataType:'json',
         toolbar:'#toolbar',
         search:true,
         searchText:oldSearch,                //根据url更改search的内容
-        pagination:true,
-        sidePagination:'server',
     });
 
     $('#searchWindow').bind('input propertychange', function() {  //动态修改url的参数
