@@ -14,9 +14,10 @@ var handlers = {
             offset: req.query.offset,
             limit: req.query.limit
         };
-        if (req.query.interface) {
-            options.where.interfaceId = req.query.interface;
-        } else if (req.query.search) {
+        if (req.query.interfaceId) {
+            options.where.interfaceId = req.query.interfaceId;
+        }
+        if (req.query.search) {
             options.where.name = {
                 $like: `%${req.query.search}%`
             }
