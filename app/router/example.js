@@ -24,10 +24,14 @@ var handlers = {
         }
         example.findAndCountAll(options)
             .then(function (results) {
-                res.json({
-                    total: results.count,
-                    rows: results.rows
-                });
+                if (req.query.offset != undefined && req.query.limit != undefined) {
+                    res.json({
+                        total: results.count,
+                        rows: results.rows
+                    });
+                } else {
+                    res.json(results.rows);
+                }
             }).catch(function (err) {
                 console.error(err);
                 res.status(500).send();
