@@ -7,13 +7,18 @@ $(document).ready(function(){
         url:tableUrl,
         dataType:'json',
         toolbar:'#toolbar',
-        search:true,
-        searchText:oldSearch,                //根据url更改search的内容
+        pagination:true,
+        sidePagination:'server',
     });
 
     $('#searchWindow').bind('input propertychange', function() {  //动态修改url的参数
         var newUrl= window.location.pathname + "?developerId=" + getUrl('developerId') + "&search=" + $("#searchWindow").val();
         window.history.pushState({},0,newUrl);
+        var newSelectUrl="/api" + window.location.pathname+"?developerId=" + getUrl('developerId') + "&search=" + getUrl('search');
+        var opt = {
+            url: newSelectUrl,
+        };
+        $('#data_list').bootstrapTable('refresh', opt);
     });
 
     $.ajax({                          //下拉菜单
@@ -38,11 +43,7 @@ $(document).ready(function(){
     $('#developerSelect').change(function(){
         var selectId = $('#developerSelect option:selected').attr('developerId');
         var newUrl=window.location.pathname+"?developerId=" + selectId + "&search=" + getUrl('search');
-        if(selectId==""){                //如果不刷新，在非 查看全部 选项中，对search进行修改以后，再回到 查看全部，table就会无法加载数据
-            window.location.href=newUrl;
-        }
         var newSelectUrl="/api" + newUrl;
-        //alert(newSelectUrl);
         window.history.pushState({},0,newUrl);
         var opt = {
             url: newSelectUrl,

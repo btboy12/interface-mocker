@@ -22,3 +22,18 @@
 select::-ms-expand { /*清除ie的默认选择框样式清除，隐藏下拉箭头*/
      display: none; 
 }
+#searchWindow{
+    width:200px;
+    height:34px;
+    border: solid 1px rgb(200,200,200);
+    border-radius: 5px;
+    cursor: pointer;
+    transition:0.5s;
+    outline:none;
+    position: absolute;
+    margin-left:4px;
+    color:rgb(80,80,80);
+}
+#searchWindow:hover{
+    border-color:rgb(102,175,233);
+}
