@@ -9,6 +9,7 @@ $(document).ready(function(){
         toolbar:'#toolbar',
         pagination:true,
         sidePagination:'server',
+        height:800,
     });
 
     $('#searchWindow').bind('input propertychange', function() {  //动态修改url的参数
