@@ -1,0 +1,34 @@
+<html>
+<script>
+    function process() {
+        var reg = /[\d\.]+(\D+)\n基本概述\n描述\t(\D+)\n角色\t(\D+)\nRestful请求格式\t([a-zA-Z\d:\/\.\{\}_]+)\n\n请求方法\t(\D+)\n\n服务器接收数据项\n.+\n.+\n([\w\W]+)服务器返回数据项\n.+\n.+\n([\w\W]+)/;
+        var parse_result = reg.exec(document.getElementById("input").value);
+
+        document.getElementById("output").value = JSON.stringify({
+            name: parse_result[1],
+            description: parse_result[2],
+            role: parse_result[3],
+            url: parse_result[4],
+            method: parse_result[5],
+            reqInfo: parse_result[6].split("\n").map((v) => { return info(v.split("\t")); }),
+            resInfo: parse_result[7].split("\n").map((v) => { return info(v.split("\t")); })
+        });
+
+        function info(arr) {
+            return {
+                name: arr[0] || '',
+                type: arr[1] || '',
+                description: arr[2] || '',
+                comment: arr[3] || ''
+            }
+        }
+    }
+</script>
+
+<body>
+    <textarea rows="30" cols="50" id="input"></textarea>
+    <button onclick="process()">处理</button>
+    <textarea rows="30" cols="50" id="output"></textarea>
+</body>
+
+</html>

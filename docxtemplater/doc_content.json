@@ -1,0 +1,260 @@
+{
+    "doc": [
+        {
+            "interface_class": [
+                {
+                    "name": "餐厅管理者",
+                    "interface": [
+                        {
+                            "name": "修改指定店面的商家优惠折扣",
+                            "description": "修改指定店面的商家优惠折扣",
+                            "role": "餐厅管理者",
+                            "url": "http://api.181.com/v1/shop/{shop_account_id}/shop_discount",
+                            "method": "PATCH",
+                            "reqInfo": [
+                                {
+                                    "name": "shop_account_id",
+                                    "type": "int",
+                                    "description": "商家账号ID",
+                                    "comment": ""
+                                },
+                                {
+                                    "name": "shop_discount_id",
+                                    "type": "int",
+                                    "description": "商家折扣自增id",
+                                    "comment": ""
+                                },
+                                {
+                                    "name": "discount_percent",
+                                    "type": "Float(4)",
+                                    "description": "折扣比率",
+                                    "comment": "可选"
+                                },
+                                {
+                                    "name": "discount_name",
+                                    "type": "String",
+                                    "description": "折扣名称",
+                                    "comment": "可选"
+                                },
+                                {
+                                    "name": "member_type_id",
+                                    "type": "int",
+                                    "description": "会员类型id",
+                                    "comment": "可选"
+                                },
+                                {
+                                    "name": "",
+                                    "type": "",
+                                    "description": "",
+                                    "comment": ""
+                                },
+                                {
+                                    "name": "",
+                                    "type": "",
+                                    "description": "",
+                                    "comment": ""
+                                }
+                            ],
+                            "resInfo": [
+                                {
+                                    "name": "",
+                                    "type": "",
+                                    "description": "",
+                                    "comment": ""
+                                },
+                                {
+                                    "name": "",
+                                    "type": "",
+                                    "description": "",
+                                    "comment": ""
+                                },
+                                {
+                                    "name": "",
+                                    "type": "",
+                                    "description": "",
+                                    "comment": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "删除指定店面的商家优惠折扣",
+                            "description": "删除指定店面的商家优惠折扣",
+                            "role": "餐厅管理者",
+                            "url": "http://api.181.com/v1/shop/{shop_account_id}/shop_discount",
+                            "method": "DELET",
+                            "reqInfo": [
+                                {
+                                    "name": "shop_account_id",
+                                    "type": "int",
+                                    "description": "商家账号ID",
+                                    "comment": ""
+                                },
+                                {
+                                    "name": "shop_discount_id",
+                                    "type": "int",
+                                    "description": "商家折扣自增id",
+                                    "comment": ""
+                                },
+                                {
+                                    "name": "",
+                                    "type": "",
+                                    "description": "",
+                                    "comment": ""
+                                },
+                                {
+                                    "name": "",
+                                    "type": "",
+                                    "description": "",
+                                    "comment": ""
+                                }
+                            ],
+                            "resInfo": [
+                                {
+                                    "name": "",
+                                    "type": "",
+                                    "description": "",
+                                    "comment": ""
+                                },
+                                {
+                                    "name": "",
+                                    "type": "",
+                                    "description": "",
+                                    "comment": ""
+                                },
+                                {
+                                    "name": "",
+                                    "type": "",
+                                    "description": "",
+                                    "comment": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "新建指定店面的商家优惠折扣",
+                            "description": "新建指定店面的商家优惠折扣",
+                            "role": "餐厅管理者",
+                            "url": "http://api.181.com/v1/shop/{shop_account_id}/shop_discount",
+                            "method": "POST",
+                            "reqInfo": [
+                                {
+                                    "name": "shop_account_id",
+                                    "type": "int",
+                                    "description": "商家帐号id",
+                                    "comment": ""
+                                },
+                                {
+                                    "name": "discount_percent",
+                                    "type": "Float(4)",
+                                    "description": "折扣比率",
+                                    "comment": ""
+                                },
+                                {
+                                    "name": "discount_name",
+                                    "type": "String",
+                                    "description": "折扣名称",
+                                    "comment": ""
+                                },
+                                {
+                                    "name": "member_type_id",
+                                    "type": "int",
+                                    "description": "会员类型id",
+                                    "comment": ""
+                                },
+                                {
+                                    "name": "",
+                                    "type": "",
+                                    "description": "",
+                                    "comment": ""
+                                },
+                                {
+                                    "name": "",
+                                    "type": "",
+                                    "description": "",
+                                    "comment": ""
+                                }
+                            ],
+                            "resInfo": [
+                                {
+                                    "name": "",
+                                    "type": "",
+                                    "description": "",
+                                    "comment": ""
+                                },
+                                {
+                                    "name": "",
+                                    "type": "",
+                                    "description": "",
+                                    "comment": ""
+                                },
+                                {
+                                    "name": "",
+                                    "type": "",
+                                    "description": "",
+                                    "comment": ""
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "商城管理者",
+                    "interface": [
+                        {
+                            "name": " 新增地图",
+                            "description": "新增地图",
+                            "role": "商城管理者",
+                            "url": "http://api.181.com/v1/map",
+                            "method": "POST ",
+                            "reqInfo": [
+                                {
+                                    "name": "floor_no",
+                                    "type": "String",
+                                    "description": "楼层",
+                                    "comment": ""
+                                },
+                                {
+                                    "name": "map_type",
+                                    "type": "Int",
+                                    "description": "地图类型",
+                                    "comment": "1-商城   2-停车场"
+                                },
+                                {
+                                    "name": "pic_url",
+                                    "type": "String",
+                                    "description": "图片url",
+                                    "comment": ""
+                                },
+                                {
+                                    "name": "",
+                                    "type": "",
+                                    "description": "",
+                                    "comment": ""
+                                },
+                                {
+                                    "name": "",
+                                    "type": "",
+                                    "description": "",
+                                    "comment": ""
+                                }
+                            ],
+                            "resInfo": [
+                                {
+                                    "name": "",
+                                    "type": "",
+                                    "description": "",
+                                    "comment": ""
+                                },
+                                {
+                                    "name": "",
+                                    "type": "",
+                                    "description": "",
+                                    "comment": ""
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
