@@ -1,5 +1,5 @@
-const { developer, example } = require("../mapper.js");
-const { update } = require("../proxy_server");
+const { developer, interface } = require("../mapper.js");
+const proxy_server = require("../proxy_server");
 
 exports.path = "/api/developer/:id";
 
@@ -19,15 +19,13 @@ var handlers = {
                 id: req.params.id
             }
         }).then(function (result) {
-            example.findAll({
-                where: { interfaceId: req.params.id },
+            return interface.findAll({
+                where: { developerId: req.params.id },
                 attributes: ["id"]
             }).then((results) => {
-                results.map((v, i, arr) => {
-                    update(v.id);
-                });
+                proxy_server.emit("update interface", results.map(v => { return v.id }));
+                res.sendStatus(200);
             });
-            res.sendStatus(200);
         }).catch(function (err) {
             console.warn(err);
             res.sendStatus(500);

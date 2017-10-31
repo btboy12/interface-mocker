@@ -1,5 +1,9 @@
 const http = require('http');
 const pathToRegexp = require('path-to-regexp');
+const events = require('events');
+const socketio = require("./socketio");
+const emitter = new events.EventEmitter();
+
 const { developer, interface, example } = require('./mapper');
 const routers = {};
 var server_info = {};
@@ -56,7 +60,7 @@ function Layer(data) {
     _.developerId = data.developerId;
 
     _.update = function () {
-        interface.findById(_.id).then(result => {
+        return interface.findById(_.id).then(result => {
             _.reg = pathToRegexp(result.router);
             _.method = result.method;
             _.developerId = result.developerId;
@@ -82,6 +86,18 @@ function Layer(data) {
     init();
 }
 
+emitter.on("update interface", interfaces => {
+    Promise.all(interfaces.map(key => {
+        if (routers[key]) {
+            return routers[key].update();
+        } else {
+            return interface.findById(key).then((interface) => {
+                interface && (routers[interface.id] = new Layer(interface));
+            });
+        }
+    })).then(socketio.update_interface);
+});
+
 exports.start = function (port) {
     app.listen(port);
     exports.info = {
@@ -97,16 +113,9 @@ exports.stop = function () {
     console.info(`proxy server stop`);
 }
 
-exports.update = function (key, param) {
-    if (routers[key]) {
-        routers[key].update(param);
-    } else {
-        interface.findById(key).then((interface) => {
-            interface && (routers[interface.id] = new Layer(interface));
-        });
-    }
-}
-
 exports.del = function (key) {
 }
 
+exports.emit = (events, args) => {
+    emitter.emit(events, args);
+};

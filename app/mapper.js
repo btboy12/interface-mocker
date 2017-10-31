@@ -3,7 +3,8 @@ const Sequelize = require('sequelize');
 const orm = new Sequelize({
     database: "interlong",
     dialect: 'sqlite',
-    storage: 'database.db'
+    storage: 'database.db',
+    logging: false
 });
 
 // 用户表
