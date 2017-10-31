@@ -50,7 +50,7 @@ var interface = orm.define('interface', {
 });
 interface.belongsTo(developer);
 interface.belongsTo(interface_class);
-interface.belongsTo(project);
+// interface.belongsTo(project);
 
 // 返回示例表
 var example = orm.define("example", {
