@@ -1,5 +1,5 @@
 const { example, interface, orm } = require("../mapper");
-const { update } = require("../proxy_server");
+const proxy_server = require("../proxy_server");
 
 exports.path = "/api/example";
 var handlers = {
@@ -14,19 +14,24 @@ var handlers = {
             offset: req.query.offset,
             limit: req.query.limit
         };
-        if (req.query.interface) {
-            options.where.interfaceId = req.query.interface;
-        } else if (req.query.search) {
+        if (req.query.interfaceId) {
+            options.where.interfaceId = req.query.interfaceId;
+        }
+        if (req.query.search) {
             options.where.name = {
                 $like: `%${req.query.search}%`
             }
         }
         example.findAndCountAll(options)
             .then(function (results) {
-                res.json({
-                    total: results.count,
-                    rows: results.rows
-                });
+                if (req.query.offset != undefined && req.query.limit != undefined) {
+                    res.json({
+                        total: results.count,
+                        rows: results.rows
+                    });
+                } else {
+                    res.json(results.rows);
+                }
             }).catch(function (err) {
                 console.error(err);
                 res.status(500).send();
@@ -35,7 +40,7 @@ var handlers = {
     post: function (req, res) {
         example.create(req.body)
             .then(function (result) {
-                update(result.id);
+                proxy_server.emit("update interface", [result.interfaceId]);
                 res.sendStatus(200);
             }).catch(function (err) {
                 console.error(err);

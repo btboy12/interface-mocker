@@ -16,18 +16,22 @@ var handlers = {
         };
         if (req.query.developerId) {
             options.where.developerId = req.query.developerId;
-        } else if (req.query.search) {
+        }
+        if (req.query.search) {
             options.where.name = {
                 $like: `%${req.query.search}%`
             }
         }
         interface.findAndCountAll(options)
             .then(function (results) {
-                // res.json({
-                //     total: results.count,
-                //     rows: results.rows
-                // });
-                res.json(results.rows);
+                if (req.query.offset != undefined && req.query.limit != undefined) {
+                    res.json({
+                        total: results.count,
+                        rows: results.rows
+                    });
+                } else {
+                    res.json(results.rows);
+                }
             }).catch(function (err) {
                 console.error(err);
                 res.status(500).send();
