@@ -8,12 +8,12 @@ const orm = new Sequelize({
 });
 
 //项目表
-// var project = orm.define("project", {
-//     id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
-//     name: { type: Sequelize.STRING, allowNull: false, validate: { notEmpty: true } },
-//     port: { type: Sequelize.INTEGER, unique: true },
-//     description: { type: Sequelize.STRING }
-// });
+var project = orm.define("project", {
+    id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
+    name: { type: Sequelize.STRING, allowNull: false, validate: { notEmpty: true } },
+    port: { type: Sequelize.INTEGER, unique: true },
+    description: { type: Sequelize.STRING }
+});
 
 // 用户表
 var developer = orm.define('developer', {
@@ -46,11 +46,11 @@ var interface = orm.define('interface', {
     reqInfo: { type: Sequelize.STRING },
     resInfo: { type: Sequelize.STRING },
     description: { type: Sequelize.STRING },
-    inUse: { type: Sequelize.BOOLEAN, allowNull: false, validate: { notEmpty: true }, defaultValue: true },
+    isProxy: { type: Sequelize.BOOLEAN, allowNull: false, validate: { notEmpty: true }, defaultValue: true },
 });
 interface.belongsTo(developer);
 interface.belongsTo(interface_class);
-// interface.belongsTo(project);
+interface.belongsTo(project);
 
 // 返回示例表
 var example = orm.define("example", {
@@ -81,3 +81,4 @@ exports.developer = developer;
 exports.test_exmp = test_exmp;
 exports.status = status;
 exports.interface_class = interface_class;
+exports.project = project;
