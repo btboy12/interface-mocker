@@ -46,7 +46,7 @@ var interface = orm.define('interface', {
     reqInfo: { type: Sequelize.STRING },
     resInfo: { type: Sequelize.STRING },
     description: { type: Sequelize.STRING },
-    inUse: { type: Sequelize.BOOLEAN, allowNull: false, validate: { notEmpty: true }, defaultValue: true },
+    isProxy: { type: Sequelize.BOOLEAN, allowNull: false, validate: { notEmpty: true }, defaultValue: true },
 });
 interface.belongsTo(developer);
 interface.belongsTo(interface_class);
