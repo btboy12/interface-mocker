@@ -8,95 +8,108 @@ const { developer, interface, example } = require('./mapper');
 const routers = {};
 var server_info = {};
 
-interface.findAll().then(interfaces => {
+function ProxyError(code, msg) {
+    this.name = 'ProxyError';
+    this.code = code || 500;
+    this.message = msg || 'Internal Server Error';
+    this.stack = (new Error()).stack;
+}
+ProxyError.prototype = Object.create(Error.prototype);
+ProxyError.prototype.constructor = ProxyError;
+
+interface.findAll({ attributes: ["id", "method", "router"] }).then(interfaces => {
     for (var intfcl of interfaces) {
         routers[intfcl.id] = new Layer(intfcl);
     }
 });
 
+function send_proxy(req, res, developerId) {
+    return developer.findById(developerId, { attributes: ["addr", "port"] }).then(result => {
+        if (result) {
+            req.headers["host"] = result.addr;
+            var _req = http.request({
+                host: result.addr,
+                port: result.port,
+                path: req.url,
+                method: req.method,
+                headers: req.headers
+            }, function (_res) {
+                res.writeHead(_res.statusCode, _res.headers)
+                _res.pipe(res);
+                return;
+            }).on("error", err => {
+                console.error(err);
+                throw new ProxyError(500, "Remote Request Failed");
+            });
+            req.pipe(_req);
+            return;
+        } else {
+            throw new ProxyError(404, "No Avaliable Proxy Is Specified");
+        }
+    });
+}
+
+function send_example(req, res, interfaceId) {
+    return example.findAll({ where: { interfaceId: interfaceId, inUse: true }, include: ["cookies", "content", "code"] }).then(results => {
+        if (null == results || results.length == 0) throw new ProxyError(404, "No Avaliable Response Is Specified");
+        var response = results[Math.floor(results.length * Math.random())];
+        response.cookies && res.setHeader("Set-Cookie", response.cookies);
+        response.content && res.write(response.content);
+        res.statusCode = response.code;
+        res.end();
+    })
+}
+
 const app = http.createServer(function (req, res) {
     for (var i in routers) {
         var router = routers[i];
         if (req.method.toLocaleLowerCase() === router.method && router.reg.test(req.url.split("?")[0])) {
-            if (router.response && router.response.length) {
-                var _response = router.response[Math.floor(router.response.length * Math.random())];
-                _response.cookies && res.setHeader("Set-Cookie", _response.cookies);
-                _response.content && res.write(_response.content);
-                res.statusCode = _response.code;
+            interface.findById(router.id, { attributes: ["developerId", "isProxy"] }).then(result => {
+                return result.isProxy ? send_proxy(req, res, result.developerId) : send_example(req, res, router.id);
+            }).catch(e => {
+                console.error(e);
+                if (e instanceof (ProxyError)) {
+                    res.statusCode = e.code;
+                    res.write(e.message);
+                } else {
+                    res.statusCode = 500;
+                    res.write("Internal Server Error");
+                }
                 res.end();
-                return;
-            } else {
-                req.headers["host"] = router.developer.addr;
-                var _req = http.request({
-                    host: router.developer.addr,
-                    port: router.developer.port,
-                    path: req.url,
-                    method: router.method,
-                    headers: req.headers
-                }, function (_res) {
-                    res.writeHead(_res.statusCode, _res.headers)
-                    _res.pipe(res);
-                }).on("error", err => {
-                    console.error(err);
-                    res.statusCode = 400;
-                    res.write("Remote Request Failed");
-                    res.end();
-                });
-                req.pipe(_req);
-                return;
-            }
+            });
+            return;
         }
     }
     res.statusCode = 404;
+    res.write("Response Not Found");
     res.end();
-    return;
 });
 
 function Layer(data) {
     var _ = this;
     _.id = data.id;
-    _.reg = pathToRegexp(data.router);
-    _.method = data.method;
-    _.developerId = data.developerId;
 
-    _.update = function () {
-        return interface.findById(_.id).then(result => {
+    if (data.router && data.method) {
+        _.reg = pathToRegexp(data.router);
+        _.method = data.method;
+    } else {
+        interface.findById(_.id, { attributes: ["method", "router"] }).then(result => {
             _.reg = pathToRegexp(result.router);
             _.method = result.method;
-            _.developerId = result.developerId;
-            init();
-        });
-    };
-
-    function init() {
-        example.findAll({
-            attributes: ['cookies', 'content', 'code'],
-            where: {
-                interfaceId: _.id,
-                inUse: true
-            }
-        }).then(function (examples) {
-            _.response = examples;
-        });
-        developer.findById(_.developerId, { attributes: ["addr", "port"] }).then(result => {
-            _.developer = result.get({ plain: true });
         });
     }
-
-    init();
 }
 
-emitter.on("update interface", interfaces => {
-    Promise.all(interfaces.map(key => {
-        if (routers[key]) {
-            return routers[key].update();
-        } else {
-            return interface.findById(key).then((interface) => {
-                interface && (routers[interface.id] = new Layer(interface));
-            });
-        }
-    })).then(socketio.update_interface);
-});
+exports.setInterface = function (data) {
+    var id = parseInt(data.id);
+    if (isNaN(id)) throw new Error("Fail to get interface id");
+    routers[id] = new Layer(data);
+    socketio.update_interface();
+}
+
+exports.delInterface = function (key) {
+    routers[key] && delete routers[key];
+}
 
 exports.start = function (port) {
     app.listen(port);
@@ -112,10 +125,3 @@ exports.stop = function () {
     exports.info = {};
     console.info(`proxy server stop`);
 }
-
-exports.del = function (key) {
-}
-
-exports.emit = (events, args) => {
-    emitter.emit(events, args);
-};

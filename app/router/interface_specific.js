@@ -18,8 +18,8 @@ var handlers = {
             where: {
                 id: req.params.id
             }
-        }).then(function () {
-            proxy_server.emit("update interface", [req.params.id]);
+        }).then(function (result) {
+            proxy_server.setInterface(result);
             res.sendStatus(200);
         }).catch(function (err) {
             console.warn(err);
@@ -27,10 +27,9 @@ var handlers = {
         });
     },
     delete: function (req, res) {
-        interface.findById(req.params.id)
-            .then(function (result) {
-                result.destroy();
-            }).then(function () {
+        interface.destroy({ where: { id: req.params.id } })
+            .then(function () {
+                proxy_server.delInterface(req.params.id);
                 res.sendStatus(200);
             }).catch(function (err) {
                 console.warn(err);

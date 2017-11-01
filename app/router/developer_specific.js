@@ -1,5 +1,4 @@
 const { developer, interface } = require("../mapper.js");
-const proxy_server = require("../proxy_server");
 
 exports.path = "/api/developer/:id";
 
@@ -23,7 +22,6 @@ var handlers = {
                 where: { developerId: req.params.id },
                 attributes: ["id"]
             }).then((results) => {
-                proxy_server.emit("update interface", results.map(v => { return v.id }));
                 res.sendStatus(200);
             });
         }).catch(function (err) {
