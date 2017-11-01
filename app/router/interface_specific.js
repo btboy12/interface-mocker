@@ -18,8 +18,8 @@ var handlers = {
             where: {
                 id: req.params.id
             }
-        }).then(function () {
-            proxy_server.emit("update interface", [req.params.id]);
+        }).then(function (result) {
+            proxy_server.setInterface(result);
             res.sendStatus(200);
         }).catch(function (err) {
             console.warn(err);
