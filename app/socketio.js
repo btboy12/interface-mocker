@@ -15,8 +15,7 @@ exports.create = server => {
                 } else {
                     socket.emit("proxy info", {
                         protocol: "http",
-                        port: proxy_server.info.port,
-                        host: "211.83.110.4"
+                        port: proxy_server.info.port
                     })
                     interface.findAll({ attributes: ["router", "method"] })
                         .then((results) => { socket.emit("interface list", results) });

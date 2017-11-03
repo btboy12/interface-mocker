@@ -1,11 +1,11 @@
 const { interface, developer, orm } = require("../mapper");
-const { update } = require("../proxy_server");
+const proxy_server = require("../proxy_server");
 
 exports.path = "/api/interface";
 var handlers = {
     get: function (req, res) {
         var options = {
-            attributes: ['id', 'name', 'router'],
+            attributes: ['id', 'name', 'router', "isProxy"],
             include: {
                 model: developer,
                 attributes: ['name']
@@ -40,7 +40,7 @@ var handlers = {
     post: function (req, res) {
         interface.create(req.body)
             .then(function (result) {
-                update(result.id);
+                proxy_server.setInterface(result);
                 res.sendStatus(200);
             }).catch(function (err) {
                 console.error(err);

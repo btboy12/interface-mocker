@@ -19,7 +19,7 @@ var handlers = {
                 id: req.params.id
             }
         }).then(function (result) {
-            proxy_server.setInterface(result);
+            proxy_server.setInterface({id:req.params.id});
             res.sendStatus(200);
         }).catch(function (err) {
             console.warn(err);

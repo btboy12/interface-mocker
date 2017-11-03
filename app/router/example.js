@@ -40,7 +40,6 @@ var handlers = {
     post: function (req, res) {
         example.create(req.body)
             .then(function (result) {
-                proxy_server.emit("update interface", [result.interfaceId]);
                 res.sendStatus(200);
             }).catch(function (err) {
                 console.error(err);

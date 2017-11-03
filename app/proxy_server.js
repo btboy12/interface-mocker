@@ -50,7 +50,7 @@ function send_proxy(req, res, developerId) {
 }
 
 function send_example(req, res, interfaceId) {
-    return example.findAll({ where: { interfaceId: interfaceId, inUse: true }, include: ["cookies", "content", "code"] }).then(results => {
+    return example.findAll({ where: { interfaceId: interfaceId, inUse: true }, attributes: ["cookies", "content", "code"] }).then(results => {
         if (null == results || results.length == 0) throw new ProxyError(404, "No Avaliable Response Is Specified");
         var response = results[Math.floor(results.length * Math.random())];
         response.cookies && res.setHeader("Set-Cookie", response.cookies);
