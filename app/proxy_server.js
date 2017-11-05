@@ -2,12 +2,17 @@ const http = require('http');
 const pathToRegexp = require('path-to-regexp');
 const events = require('events');
 const socketio = require("./socketio");
-const proxy = require("http-proxy");
+const proxy = require("http-proxy").createProxy();
 
 const { developer, interface, example } = require('./mapper');
 const routers = {};
 var server_info = {};
-
+/**
+ * 中转错误类
+ * 
+ * @param {Number} code - 错误码
+ * @param {String} msg - 错误信息
+ */
 function ProxyError(code, msg) {
     this.name = 'ProxyError';
     this.code = code || 500;
@@ -33,22 +38,12 @@ interface.findAll({ attributes: ["id", "method", "router"] }).then(interfaces =>
 function send_proxy(req, res, developerId) {
     return developer.findById(developerId, { attributes: ["addr", "port"] }).then(result => {
         if (result) {
-            req.headers["host"] = result.addr;
-            var _req = http.request({
-                host: result.addr,
-                port: result.port,
-                path: req.url,
-                method: req.method,
-                headers: req.headers
-            }, function (_res) {
-                res.writeHead(_res.statusCode, _res.headers)
-                _res.pipe(res);
-                return;
-            }).on("error", err => {
+            proxy.web(req, res, {
+                target: `http://${result.addr}:${result.port}`
+            }, err => {
                 console.error(err);
                 throw new ProxyError(500, "Remote Request Failed");
             });
-            req.pipe(_req);
             return;
         } else {
             throw new ProxyError(404, "No Avaliable Proxy Is Specified");
