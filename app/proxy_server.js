@@ -2,7 +2,7 @@ const http = require('http');
 const pathToRegexp = require('path-to-regexp');
 const events = require('events');
 const socketio = require("./socketio");
-const emitter = new events.EventEmitter();
+const proxy = require("http-proxy");
 
 const { developer, interface, example } = require('./mapper');
 const routers = {};
@@ -22,7 +22,14 @@ interface.findAll({ attributes: ["id", "method", "router"] }).then(interfaces =>
         routers[intfcl.id] = new Layer(intfcl);
     }
 });
-
+/**
+ * 将请求转发给所属开发者
+ * 
+ * @param {IncomingMessage} req 
+ * @param {ServerResponse} res 
+ * @param {Number} developerId 
+ * @returns 
+ */
 function send_proxy(req, res, developerId) {
     return developer.findById(developerId, { attributes: ["addr", "port"] }).then(result => {
         if (result) {
@@ -49,6 +56,14 @@ function send_proxy(req, res, developerId) {
     });
 }
 
+/**
+ * 随机发送启用中的返回样例
+ * 
+ * @param {IncomingMessage} req 
+ * @param {ServerResponse} res 
+ * @param {Number} developerId 
+ * @returns 
+ */
 function send_example(req, res, interfaceId) {
     return example.findAll({ where: { interfaceId: interfaceId, inUse: true }, attributes: ["cookies", "content", "code"] }).then(results => {
         if (null == results || results.length == 0) throw new ProxyError(404, "No Avaliable Response Is Specified");
@@ -84,7 +99,14 @@ const app = http.createServer(function (req, res) {
     res.write("Response Not Found");
     res.end();
 });
-
+/**
+ * 设置路由
+ * 
+ * @param {Object} data - 传入接口信息
+ * @param {Number} data.id - 接口ID
+ * @param {String} data.router - 接口对应的路径。如没有传入则自动根据ID从数据库中获取
+ * @param {String} data.method - 调用接口时使用的HTTP方法。如没有传入则自动根据ID从数据库中获取
+ */
 function Layer(data) {
     var _ = this;
     _.id = data.id;
@@ -99,18 +121,33 @@ function Layer(data) {
         });
     }
 }
-
+/**
+ * 添加/修改接口
+ * 
+ * @param {Object} data - 接口信息
+ * @param {Number} data.id - 接口ID
+ * @param {String} data.router - 接口对应的路径。如没有传入则自动根据ID从数据库中获取
+ * @param {String} data.method - 调用接口时使用的HTTP方法。如没有传入则自动根据ID从数据库中获取
+ */
 exports.setInterface = function (data) {
     var id = parseInt(data.id);
     if (isNaN(id)) throw new Error("Fail to get interface id");
     routers[id] = new Layer(data);
     socketio.update_interface();
 }
-
+/**
+ * 删除指定接口的中转服务
+ * 
+ * @param {Number} key - 指定接口的ID
+ */
 exports.delInterface = function (key) {
     routers[key] && delete routers[key];
 }
-
+/**
+ * 在指定接口启动中转服务器
+ * 
+ * @param {Number} port - 指定的接口
+ */
 exports.start = function (port) {
     app.listen(port);
     exports.info = {
@@ -119,7 +156,10 @@ exports.start = function (port) {
     };
     console.info(`proxy server listen on ${port}`);
 }
-
+/**
+ * 关闭中转服务器
+ * 
+ */
 exports.stop = function () {
     app.close();
     exports.info = {};
