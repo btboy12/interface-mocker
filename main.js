@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const fs = require("fs");
 const path = require("path");
 const proxyServer = require("./app/proxy_server");
-const argv = require("argv");
+const argv = require("yargs").default("port", 8000).default("proxy", 8081).argv;
 
 const router_path = "./app/router/";
 const jade_path = "./app/jade"
@@ -20,20 +20,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.set('views', jade_path);
 app.set('view engine', 'jade');
-
-var { options } = argv.option([
-    {
-        name: "port",
-        short: "p",
-        type: "int",
-
-    },
-    {
-        name: "proxy",
-        short: "x",
-        type: "int"
-    }
-]).run();
 
 fs.readdir(jade_path, (err, files) => {
     files.map(value => {
@@ -72,9 +58,9 @@ app.get('/', function (req, res) {
     res.redirect('/developer');
 });
 
-server.listen(options.port || 8000, function () {
-    console.info("server running on :8000");
-    proxyServer.start(options.proxy || 8081)
+server.listen(argv.port, function () {
+    console.info(`server running on:${argv.port}`);
+    proxyServer.start(argv.proxy)
 });
 
 function extractIP(req, res, next) {
