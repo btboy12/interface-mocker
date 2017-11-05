@@ -42,18 +42,6 @@ fs.readdir(router_path, (err, files) => {
     })
 });
 
-for (var file of fs.readdirSync(router_path)) {
-    ((file1) => {
-        if (file1.indexOf(".") > 0) {
-            var router_module = require(path.join(router_path, file1));
-            var router = app.route(router_module.path);
-            for (var handler in router_module.handlers) {
-                router[handler](router_module.handlers[handler]);
-            }
-        }
-    })(file);
-}
-
 app.get('/', function (req, res) {
     res.redirect('/developer');
 });
