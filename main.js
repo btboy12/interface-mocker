@@ -2,7 +2,6 @@ const express = require('express');
 const cookieParse = require('cookie-parser');
 const bodyParser = require("body-parser");
 const fs = require("fs");
-const path = require("path");
 const proxyServer = require("./app/proxy_server");
 const argv = require("yargs").default("port", 8000).default("proxy", 8081).argv;
 
@@ -33,7 +32,7 @@ fs.readdir(jade_path, (err, files) => {
 fs.readdir(router_path, (err, files) => {
     files.map(value => {
         if (value.indexOf(".") > 0) {
-            var router_module = require(path.join(router_path, file1));
+            var router_module = require(router_path + value);
             var router = app.route(router_module.path);
             for (var handler in router_module.handlers) {
                 router[handler](router_module.handlers[handler]);
