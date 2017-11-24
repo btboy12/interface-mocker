@@ -3,8 +3,17 @@ const Sequelize = require('sequelize');
 const orm = new Sequelize({
     database: "interlong",
     dialect: 'sqlite',
-    storage: 'database.db'
+    storage: 'database.db',
+    logging: false
 });
+
+//项目表
+// var project = orm.define("project", {
+//     id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
+//     name: { type: Sequelize.STRING, allowNull: false, validate: { notEmpty: true } },
+//     port: { type: Sequelize.INTEGER, unique: true },
+//     description: { type: Sequelize.STRING }
+// });
 
 // 用户表
 var developer = orm.define('developer', {
@@ -41,6 +50,7 @@ var interface = orm.define('interface', {
 });
 interface.belongsTo(developer);
 interface.belongsTo(interface_class);
+// interface.belongsTo(project);
 
 // 返回示例表
 var example = orm.define("example", {

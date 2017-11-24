@@ -7,7 +7,10 @@ const argv = require("argv");
 
 const router_path = "./app/router/";
 const jade_path = "./app/jade"
-var app = express();
+
+const app = express();
+const server = require('http').createServer(app);
+require("./app/socketio").create(server);
 
 app.use(express.static('app/static'));
 app.use(extractIP);
@@ -59,7 +62,7 @@ app.get('/', function (req, res) {
     res.redirect('/developer');
 });
 
-var server = app.listen(options.port || 8000, function () {
+server.listen(options.port || 8000, function () {
     console.info("server running on :8000");
     proxyServer.start(options.proxy || 8081)
 });
