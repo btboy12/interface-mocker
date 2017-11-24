@@ -6,7 +6,7 @@ $(document).ready(function(){
     $('#data_list').bootstrapTable({          //table表
         url:tableUrl,
         dataType: "json",
-        toolbar:'#toolbar',
+        toolbar:'#toolbar', 
         pagination:true,
         sidePagination:'server',
         height:800,

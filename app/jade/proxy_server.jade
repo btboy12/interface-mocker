@@ -5,6 +5,7 @@ html
     body
 -     var page='proxy_server'
         include ./public/header.jade
+        script(src='/js/proxy_server-check.js')
         .container
             #toolbar.btn-group
                 btn.btn.btn-primary(onclick='add()') 添加
@@ -22,16 +23,19 @@ html
                         .form-group
                             label.control-label.col-sm-2(for='name') 姓名
                             .col-sm-10
-                                input.form-control(type='text', name='name' v-model='info.name')
-                        .form-group
+                                input#name.form-control(type='text', name='name' v-model='info.name')
+                                span#nameSpan
+                       .form-group
                             label.control-label.col-sm-2(for='addr') 地址
                             .col-sm-10
-                                input.form-control(type='text', name='addr' v-model='info.addr')
+                                input#add.form-control(type='text', name='addr' v-model='info.addr')
+                                span#addSpan
                         .form-group
                             label.control-label.col-sm-2(for='port') 端口号
                             .col-sm-10
-                                input.form-control(type='number', name='port' v-model='info.port')
+                                input#num.form-control(type='number', name='port' v-model='info.port')
+                                span#numSpan
                     .modal-footer
-                        button.btn.btn-default(type='button', data-dismiss='modal') 取消
-                        button.btn.btn-primary(type='button', onclick='upload()') 确定
+                        button#cancelBtn.btn.btn-default(type='button', data-dismiss='modal') 取消
+                        button#confirmBtn.btn.btn-primary(type='button', onclick='upload()') 确定
     script(src='/js/developer.js')
