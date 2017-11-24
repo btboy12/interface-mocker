@@ -21,19 +21,23 @@
                         .form-group
                             label.control-label.col-sm-2(for='name') 接口名
                             .col-sm-10
-                                input.form-control(type='text', name='name', v-model='info.name')
+                                input#interName.form-control(type='text', name='name', v-model='info.name', placeholder="必填")
+                                span#interNameSpan 
                         .form-group
                             label.control-label.col-sm-2(for='addr') 接口地址
                             .col-sm-10
-                                input.form-control(type='text', name='addr', v-model='info.router')
+                                input#interAdd.form-control(type='text', name='addr', v-model='info.router', placeholder="必填")
+                                span#interAddSpan
                         .form-group
                             label.control-label.col-sm-2(for='method') 请求方法
                             .col-sm-10
-                                v-select(name='method', v-model='info.method', label='name', :options="['get','head','post','put','delete','connect','options','trace','patch']")
+                                v-select#postWay(name='method', v-model='info.method', label='name', :options="['get','head','post','put','delete','connect','options','trace','patch']")
+                                span#postWaySpan
                         .form-group
                             label.control-label.col-sm-2(for='developerId') 开发者
                             .col-sm-10
-                                v-select(name='developerId', v-model='selectedDeveloper', label='name', :options='developers', :on-search='getDevelopers')
+                                v-select#deveName(name='developerId', v-model='selectedDeveloper', label='name', :options='developers', :on-search='getDevelopers')
+                                span#deveNameSpan
                 //- .panel.panel-info
                 //-     .panel-heading
                 //-         h3.panel-title 请求参数
@@ -73,6 +77,6 @@
                 //-                 tbody#res_info_content
                 //-         button.btn.btn-default(onclick="addResInfo(event)") 添加
             .modal-footer
-                button.btn.btn-default(type='button', data-dismiss='modal') 取消
-                button.btn.btn-primary(type='button', @click='upload()') 确定
+                button#cancelBtn.btn.btn-default(type='button', data-dismiss='modal') 取消
+                button#confirmBtn.btn.btn-primary(type='button', @click='upload()') 确定
 script(src="/js/modal/interface.js")

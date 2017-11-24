@@ -5,6 +5,10 @@ html
     body
 -     var page='developer'
         include ./public/header.jade
+        link(rel='stylesheet', href='/css/check.css')
+        script(src="/public/js/jquery.js")
+        script(src='/js/developer-check.js')
+        script(src='/js/jquery.validate.min.js')
         .container
             #toolbar.btn-group
                 btn.btn.btn-primary(onclick='add()') 添加
@@ -17,3 +21,4 @@ html
                         th(data-formatter='getButton') 操作
             include ./modal/developer.jade
     script(src='/js/developer.js')
+

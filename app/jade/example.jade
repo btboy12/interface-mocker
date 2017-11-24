@@ -8,10 +8,12 @@ html
         link(rel='stylesheet', href='/css/example.css')
         link(rel='stylesheet', href='/public/css/bootstrap.css')
         link(rel='stylesheet', href='/public/css/bootstrap-table.css')
+        link(rel='stylesheet', href='/css/check.css')
         script(src="/public/js/vue-select.js")
         script(src="/public/js/jquery.js")
         script(src="/public/js/select2.min.js")
-        script(src="/js/example-search.js") 
+        script(src="/js/example-search.js")
+        script(src='/js/example-check.js')
         script(src="/public/js/bootstrap.js")
         script(src="/public/js/bootstrap-table-zh-CN.js")
         script(src="/public/js/bootstrap-table.js")
@@ -34,24 +36,29 @@ html
                         .form-group
                             label.control-label.col-sm-2(for='name') 样例名
                             .col-sm-10
-                                input.form-control(type='text', name='name' v-model='info.name')
+                                input#examName.form-control(type='text', name='name' v-model='info.name' placeholder="必填")
+                                span#examNameSpan
                         .form-group
                             label.control-label.col-sm-2(for='intfcl') 对应接口
                             .col-sm-10
-                                v-select(v-model='selectedInterface', label='name', :options='interfaces', :on-search='getInterfaces')
+                                v-select#selInter(v-model='selectedInterface', label='name', :options='interfaces', :on-search='getInterfaces')
+                                span#selInterSpan
                         .form-group
                             label.control-label.col-sm-2(for='code') 状态码
                             .col-sm-10
-                                input.form-control(type='number', name='code' v-model='info.code')
+                                input#codeNum.form-control(type='number', name='code' v-model='info.code' placeholder="必填")
+                                span#codeNumSpan
                         .form-group
                             label.control-label.col-sm-2(for='cookies') 设置cookies
                             .col-sm-10
-                                textarea.form-control(name="cookies", v-model='info.cookies' cols="30", rows="10")
+                                textarea#cook.form-control(name="cookies", v-model='info.cookies' cols="30", rows="10")
+                                span#cookSpan
                         .form-group
                             label.control-label.col-sm-2(for='content') 返回内容
                             .col-sm-10
-                                textarea.form-control(name='content', v-model='info.content' cols="30", rows="10")        
+                                textarea#backContent.form-control(name='content', v-model='info.content' cols="30", rows="10")        
+                                span#backContentSpan
                     .modal-footer
-                        button.btn.btn-default(type='button', data-dismiss='modal') 取消
-                        button.btn.btn-primary(type='button', onclick='upload()') 确定
+                        button#cancelBtn.btn.btn-default(type='button', data-dismiss='modal') 取消
+                        button#confirmBtn.btn.btn-primary(type='button', onclick='upload()') 确定
     script(src='/js/example.js')
