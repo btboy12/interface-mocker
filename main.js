@@ -2,6 +2,8 @@ const express = require('express');
 const cookieParse = require('cookie-parser');
 const bodyParser = require("body-parser");
 const fs = require("fs");
+const session = require("express-session");
+const { randChars } = require("./app/utils");
 
 const { promisify } = require("util");
 
@@ -17,6 +19,14 @@ require("./app/socketio").create(server);
 
 app.use(express.static('app/static'));
 // app.use(extractIP);
+
+const secret = randChars(16);
+app.use(session({
+    secret,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 60000 }
+}))
 app.use(cookieParse());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
