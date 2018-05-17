@@ -2,6 +2,9 @@ const express = require('express');
 const cookieParse = require('cookie-parser');
 const bodyParser = require("body-parser");
 const fs = require("fs");
+
+const { promisify } = require("util");
+
 const proxyServer = require("./app/proxy_server");
 const argv = require("yargs").default("port", 8000).default("proxy", 8081).argv;
 
@@ -13,23 +16,27 @@ const server = require('http').createServer(app);
 require("./app/socketio").create(server);
 
 app.use(express.static('app/static'));
-app.use(extractIP);
+// app.use(extractIP);
 app.use(cookieParse());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.set('views', jade_path);
 app.set('view engine', 'jade');
 
-fs.readdir(jade_path, (err, files) => {
+const readdir = promisify(fs.readdir);
+
+(async () => {
+    let files = await readdir(jade_path);
     files.map(value => {
         if (value.indexOf('.') > 0) {
             var f_name = value.split('.')[0]
             app.get(`/${f_name}`, (req, res) => { res.render(f_name) });
         }
     });
-});
+})();
 
-fs.readdir(router_path, (err, files) => {
+(async () => {
+    let files = await readdir(router_path);
     files.map(value => {
         if (value.indexOf(".") > 0) {
             var router_module = require(router_path + value);
@@ -39,7 +46,7 @@ fs.readdir(router_path, (err, files) => {
             }
         }
     })
-});
+})();
 
 app.get('/', function (req, res) {
     res.redirect('/developer');

@@ -1,9 +1,11 @@
-const {developer} = require("../mapper.js");
+const { developer } = require("../mapper.js");
 
 exports.path = "/api/developer";
 var handlers = {
     get: function (req, res) {
-        developer.findAll().then(function (results) {
+        developer.findAll({
+            attributes: ['id', 'name', 'addr', 'port']
+        }).then(function (results) {
             res.json(results);
         }).catch(function (err) {
             console.error(err);

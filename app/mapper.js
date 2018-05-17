@@ -18,9 +18,12 @@ var project = orm.define("project", {
 // 用户表
 var developer = orm.define('developer', {
     id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
+    account: { type: Sequelize.STRING, allowNull: false, validate: { notEmpty: true } },
     name: { type: Sequelize.STRING, allowNull: false, validate: { notEmpty: true } },
     addr: { type: Sequelize.STRING, allowNull: false, validate: { notEmpty: true } },
-    port: { type: Sequelize.INTEGER, allowNull: false, validate: { notEmpty: true } }
+    port: { type: Sequelize.INTEGER, allowNull: false, validate: { notEmpty: true } },
+    salt: { type: Sequelize.STRING, allowNull: false, validate: { notEmpty: true } },
+    psw: { type: Sequelize.STRING, allowNull: false, validate: { notEmpty: true } }
 });
 
 // 接口分表表
