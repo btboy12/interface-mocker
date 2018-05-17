@@ -66,6 +66,7 @@ function send_example(req, res, interfaceId) {
         response.cookies && res.setHeader("Set-Cookie", response.cookies);
         res.setHeader("Content-Type", 'application/json;charset=UTF-8');
         response.content && res.write(response.content);
+        console.info(response.content);
         res.statusCode = response.code;
         res.end();
     })
