@@ -13,7 +13,7 @@ var handlers = {
                 },
             });
             if (psw !== sha1(sha1(req.body.psw) + salt)) throw new TypeError("wrong password");
-
+            req.session.uid = id;
             res.sendStatus(200);
         }
         catch (err) {

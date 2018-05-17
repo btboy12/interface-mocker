@@ -30,6 +30,9 @@ app.use(session({
 app.use(cookieParse());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+app.use(checkAuth);
+
 app.set('views', jade_path);
 app.set('view engine', 'jade');
 
@@ -76,4 +79,9 @@ function extractIP(req, res, next) {
             req.connection.socket.remoteAddress || '');
     }
     next();
+}
+
+function checkAuth(req, res, next) {
+    if (req.session.uid === undefined && req.url.startsWith("/api") && req.url !== "/api/login") res.sendStatus(401);
+    else next();
 }

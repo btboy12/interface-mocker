@@ -2,15 +2,17 @@ const { developer } = require("../mapper.js");
 
 exports.path = "/api/developer";
 var handlers = {
-    get: function (req, res) {
-        developer.findAll({
-            attributes: ['id', 'name', 'addr', 'port']
-        }).then(function (results) {
-            res.json(results);
-        }).catch(function (err) {
+    async get(req, res) {
+        try {
+            res.json(
+                await developer.findAll({
+                    attributes: ['id', 'name', 'addr', 'port']
+                })
+            );
+        } catch (err) {
             console.error(err);
-            res.status(500).send();
-        });
+            res.sendStatus(500);
+        }
     },
     post: function (req, res) {
         developer.create(req.body)
