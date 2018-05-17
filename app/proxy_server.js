@@ -64,6 +64,7 @@ function send_example(req, res, interfaceId) {
         if (null == results || results.length == 0) throw new ProxyError(404, "No Avaliable Response Is Specified");
         var response = results[Math.floor(results.length * Math.random())];
         response.cookies && res.setHeader("Set-Cookie", response.cookies);
+        res.setHeader("Content-Type", 'application/json;charset=UTF-8');
         response.content && res.write(response.content);
         res.statusCode = response.code;
         res.end();
@@ -73,20 +74,33 @@ function send_example(req, res, interfaceId) {
 const app = http.createServer(function (req, res) {
     for (var i in routers) {
         var router = routers[i];
-        if (req.method.toLocaleLowerCase() === router.method && router.reg.test(req.url.split("?")[0])) {
-            interface.findById(router.id, { attributes: ["developerId", "isProxy"] }).then(result => {
-                return result.isProxy ? send_proxy(req, res, result.developerId) : send_example(req, res, router.id);
-            }).catch(e => {
-                console.error(e);
-                if (e instanceof (ProxyError)) {
-                    res.statusCode = e.code;
-                    res.write(e.message);
-                } else {
-                    res.statusCode = 500;
-                    res.write("Internal Server Error");
-                }
-                res.end();
-            });
+        try {
+            if (req.method.toLocaleLowerCase() === router.method && router.reg.test(req.url.split("?")[0])) {
+                interface.findById(router.id, { attributes: ["developerId", "isProxy"] }).then(result => {
+                    return result.isProxy ? send_proxy(req, res, result.developerId) : send_example(req, res, router.id);
+                }).catch(e => {
+                    console.error(e);
+                    if (e instanceof (ProxyError)) {
+                        res.statusCode = e.code;
+                        res.write(e.message);
+                    } else {
+                        res.statusCode = 500;
+                        res.write("Internal Server Error");
+                    }
+                    res.end();
+                });
+                return;
+            }
+        } catch (err) {
+            console.error(e);
+            if (e instanceof (ProxyError)) {
+                res.statusCode = e.code;
+                res.write(e.message);
+            } else {
+                res.statusCode = 500;
+                res.write("Internal Server Error");
+            }
+            res.end();
             return;
         }
     }
